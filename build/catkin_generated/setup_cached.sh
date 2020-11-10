@@ -7,11 +7,11 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/devel:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH="/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/devel/lib:$LD_LIBRARY_PATH"
+export CMAKE_PREFIX_PATH="/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH='/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel/lib:/home/anyone/catkin_ws/devel/lib:/opt/ros/melodic/lib:/usr/local/cuda-10.2/lib64'
 export PATH='/opt/ros/melodic/bin:/home/anyone/.local/bin:/usr/local/cuda-10.2/bin:/home/anyone/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin$'
-export PKG_CONFIG_PATH="/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
-export PWD='/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build'
-export PYTHONPATH="/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/devel/lib/python2.7/dist-packages:$PYTHONPATH"
-export ROSLISP_PACKAGE_DIRECTORIES="/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
-export ROS_PACKAGE_PATH="/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros:$ROS_PACKAGE_PATH"
+export PKG_CONFIG_PATH="/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
+export PWD='/home/anyone/catkin_ws3/src/traditional_stereo_ros/build'
+export PYTHONPATH="/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel/lib/python2.7/dist-packages:$PYTHONPATH"
+export ROSLISP_PACKAGE_DIRECTORIES="/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROS_PACKAGE_PATH="/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros:/home/anyone/catkin_ws3/src/traditional_stereo_ros:$ROS_PACKAGE_PATH"

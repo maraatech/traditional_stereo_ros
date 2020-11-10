@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/gtest/googlemock/gtest/cmake_install.cmake")
+  include("/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/gtest/googlemock/gtest/cmake_install.cmake")
 
 endif()
 

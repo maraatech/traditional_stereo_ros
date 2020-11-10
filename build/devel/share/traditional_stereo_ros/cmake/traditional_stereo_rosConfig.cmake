@@ -67,8 +67,8 @@ set(traditional_stereo_ros_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(traditional_stereo_ros_SOURCE_PREFIX /home/anyone/catkin_ws_trevor/src/traditional_stereo_ros)
-  set(traditional_stereo_ros_DEVEL_PREFIX /home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/devel)
+  set(traditional_stereo_ros_SOURCE_PREFIX /home/anyone/catkin_ws3/src/traditional_stereo_ros)
+  set(traditional_stereo_ros_DEVEL_PREFIX /home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel)
   set(traditional_stereo_ros_INSTALL_PREFIX "")
   set(traditional_stereo_ros_PREFIX ${traditional_stereo_ros_DEVEL_PREFIX})
 else()
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(traditional_stereo_ros_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/devel/include " STREQUAL " ")
+if(NOT "/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel/include " STREQUAL " ")
   set(traditional_stereo_ros_INCLUDE_DIRS "")
-  set(_include_dirs "/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/devel/include")
+  set(_include_dirs "/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/devel/inc
         message(FATAL_ERROR "Project 'traditional_stereo_ros' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'traditional_stereo_ros' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'traditional_stereo_ros' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/anyone/catkin_ws3/src/traditional_stereo_ros/${idir}'.  ${_report}")
     endif()
     _list_append_unique(traditional_stereo_ros_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/devel/lib;/home/anyone/catkin_ws/devel/lib;/opt/ros/melodic/lib)
+    foreach(path /home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel/lib;/home/anyone/catkin_ws/devel/lib;/opt/ros/melodic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -185,7 +185,7 @@ foreach(t ${traditional_stereo_ros_EXPORTED_TARGETS})
   endif()
 endforeach()
 
-set(depends "cv_bridge;image_transport;message_runtime;sensor_msgs")
+set(depends "cv_bridge;message_filters;message_runtime;sensor_msgs")
 foreach(depend ${depends})
   string(REPLACE " " ";" depend_list ${depend})
   # the package name of the dependency must be kept in a unique variable so that it is not overwritten in recursive calls

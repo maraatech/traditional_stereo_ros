@@ -67,8 +67,8 @@ set(traditional_stereo_ros_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(traditional_stereo_ros_SOURCE_PREFIX /home/anyone/catkin_ws_trevor/src/traditional_stereo_ros)
-  set(traditional_stereo_ros_DEVEL_PREFIX /home/anyone/catkin_ws_trevor/src/traditional_stereo_ros/build/devel)
+  set(traditional_stereo_ros_SOURCE_PREFIX /home/anyone/catkin_ws3/src/traditional_stereo_ros)
+  set(traditional_stereo_ros_DEVEL_PREFIX /home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel)
   set(traditional_stereo_ros_INSTALL_PREFIX "")
   set(traditional_stereo_ros_PREFIX ${traditional_stereo_ros_DEVEL_PREFIX})
 else()
@@ -185,7 +185,7 @@ foreach(t ${traditional_stereo_ros_EXPORTED_TARGETS})
   endif()
 endforeach()
 
-set(depends "cv_bridge;image_transport;message_runtime;sensor_msgs")
+set(depends "cv_bridge;message_filters;message_runtime;sensor_msgs")
 foreach(depend ${depends})
   string(REPLACE " " ";" depend_list ${depend})
   # the package name of the dependency must be kept in a unique variable so that it is not overwritten in recursive calls

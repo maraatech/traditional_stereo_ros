@@ -4,17 +4,29 @@
 // @author: Wild Boar
 //----------------------------------------------------------------------------------
 
+// Standard includes
+#include <iostream>
+using namespace std;
+
+// Ros Includes
 #include <ros/ros.h>
 
+// Messaging includes
+#include <sensor_msgs/Image.h>
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/exact_time.h>
 
+// OpenCV includes
 #include <cv_bridge/cv_bridge.h>
-
-#include <sensor_msgs/Image.h>
-
 #include <opencv2/opencv.hpp>
+
+// Amantis Includes
+#include "StereoFrame.h"
+#include "StereoFrameUtils.h"
+#include "DisplayUtils.h"
+#include "GeneralUtils.h"
+using namespace Amantis;
 
 //----------------------------------------------------------------------------------
 // Type Definitions
@@ -66,13 +78,25 @@ void Callback(const sensor_msgs::ImageConstPtr& image1, const sensor_msgs::Image
 {
   try
   {
+      // Retrieve the raw images
       cv::Mat imageData1 = cv_bridge::toCvShare(image1, "bgr8")->image;
       cv::Mat imageData2 = cv_bridge::toCvShare(image2, "bgr8")->image;
 
-      cv::Mat smallImage1; cv::resize(imageData1, smallImage1, cv::Size(), 0.25, 0.25);
-      cv::Mat smallImage2; cv::resize(imageData2, smallImage2, cv::Size(), 0.25, 0.25);
+      // Build a stereo frame
+      auto frame = StereoFrame(imageData1, imageData2);
 
-      cv::imshow("Image 1", smallImage1); cv::imshow("Image 2", smallImage2);
+      // Show the stereo frame on the screen
+      DisplayUtils::ShowStereoFrame("Frame", &frame, 1000);
+
+      // Create a small version of the frame
+      auto smallFrame = StereoFrameUtils::Resize(frame, 1000);
+
+      // Save the frame to disk
+      string homeFolder = getenv("HOME"); string suffix = GeneralUtils::GetTimeString();
+      auto baseFolder = stringstream(); baseFolder << homeFolder << "/scans";
+      StereoFrameUtils::Save(smallFrame, baseFolder.str(), suffix, ".jpg");
+
+      // Pause the screen
       cv::waitKey(30);
   }
   catch (cv_bridge::Exception& e)

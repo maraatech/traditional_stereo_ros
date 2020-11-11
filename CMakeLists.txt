@@ -20,6 +20,10 @@ find_package(OpenCV)
 include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
 
 ## Build the "Start" executable
-add_executable(Start src/Start.cpp)
+add_executable(Start    src/StereoFrameUtils.cpp
+                        src/GeneralUtils.cpp
+                        src/DisplayUtils.cpp
+                        src/Start.cpp
+)
 add_dependencies(Start ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 target_link_libraries(Start ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})

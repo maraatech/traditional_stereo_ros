@@ -778,6 +778,60 @@ gtest/fast:
 	$(MAKE) -f gtest/googlemock/gtest/CMakeFiles/gtest.dir/build.make gtest/googlemock/gtest/CMakeFiles/gtest.dir/build
 .PHONY : gtest/fast
 
+src/DisplayUtils.o: src/DisplayUtils.cpp.o
+
+.PHONY : src/DisplayUtils.o
+
+# target to build an object file
+src/DisplayUtils.cpp.o:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/DisplayUtils.cpp.o
+.PHONY : src/DisplayUtils.cpp.o
+
+src/DisplayUtils.i: src/DisplayUtils.cpp.i
+
+.PHONY : src/DisplayUtils.i
+
+# target to preprocess a source file
+src/DisplayUtils.cpp.i:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/DisplayUtils.cpp.i
+.PHONY : src/DisplayUtils.cpp.i
+
+src/DisplayUtils.s: src/DisplayUtils.cpp.s
+
+.PHONY : src/DisplayUtils.s
+
+# target to generate assembly for a file
+src/DisplayUtils.cpp.s:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/DisplayUtils.cpp.s
+.PHONY : src/DisplayUtils.cpp.s
+
+src/GeneralUtils.o: src/GeneralUtils.cpp.o
+
+.PHONY : src/GeneralUtils.o
+
+# target to build an object file
+src/GeneralUtils.cpp.o:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/GeneralUtils.cpp.o
+.PHONY : src/GeneralUtils.cpp.o
+
+src/GeneralUtils.i: src/GeneralUtils.cpp.i
+
+.PHONY : src/GeneralUtils.i
+
+# target to preprocess a source file
+src/GeneralUtils.cpp.i:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/GeneralUtils.cpp.i
+.PHONY : src/GeneralUtils.cpp.i
+
+src/GeneralUtils.s: src/GeneralUtils.cpp.s
+
+.PHONY : src/GeneralUtils.s
+
+# target to generate assembly for a file
+src/GeneralUtils.cpp.s:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/GeneralUtils.cpp.s
+.PHONY : src/GeneralUtils.cpp.s
+
 src/Start.o: src/Start.cpp.o
 
 .PHONY : src/Start.o
@@ -804,6 +858,33 @@ src/Start.s: src/Start.cpp.s
 src/Start.cpp.s:
 	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/Start.cpp.s
 .PHONY : src/Start.cpp.s
+
+src/StereoFrameUtils.o: src/StereoFrameUtils.cpp.o
+
+.PHONY : src/StereoFrameUtils.o
+
+# target to build an object file
+src/StereoFrameUtils.cpp.o:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o
+.PHONY : src/StereoFrameUtils.cpp.o
+
+src/StereoFrameUtils.i: src/StereoFrameUtils.cpp.i
+
+.PHONY : src/StereoFrameUtils.i
+
+# target to preprocess a source file
+src/StereoFrameUtils.cpp.i:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.i
+.PHONY : src/StereoFrameUtils.cpp.i
+
+src/StereoFrameUtils.s: src/StereoFrameUtils.cpp.s
+
+.PHONY : src/StereoFrameUtils.s
+
+# target to generate assembly for a file
+src/StereoFrameUtils.cpp.s:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.s
+.PHONY : src/StereoFrameUtils.cpp.s
 
 # Help Target
 help:
@@ -865,9 +946,18 @@ help:
 	@echo "... gmock"
 	@echo "... gtest_main"
 	@echo "... gtest"
+	@echo "... src/DisplayUtils.o"
+	@echo "... src/DisplayUtils.i"
+	@echo "... src/DisplayUtils.s"
+	@echo "... src/GeneralUtils.o"
+	@echo "... src/GeneralUtils.i"
+	@echo "... src/GeneralUtils.s"
 	@echo "... src/Start.o"
 	@echo "... src/Start.i"
 	@echo "... src/Start.s"
+	@echo "... src/StereoFrameUtils.o"
+	@echo "... src/StereoFrameUtils.i"
+	@echo "... src/StereoFrameUtils.s"
 .PHONY : help
 
 

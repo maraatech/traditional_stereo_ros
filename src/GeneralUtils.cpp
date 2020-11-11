@@ -37,3 +37,19 @@ string GeneralUtils::GetTimeString()
 
     return oss.str();
 }
+
+//----------------------------------------------------------------------------------
+// GetTimeString
+//----------------------------------------------------------------------------------
+
+/**
+ * This is a linux based functionality for adding the location of the home directory at the beginning of the path
+ * @param path The path that we are completing
+ * @return The resultant path
+ */
+string GeneralUtils::CompletePath(const string& path) 
+{
+    string homeFolder = getenv("HOME");
+    auto fullPath = stringstream(); fullPath << homeFolder << path;
+    return fullPath.str();
+}

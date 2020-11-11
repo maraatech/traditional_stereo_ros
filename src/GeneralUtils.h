@@ -18,5 +18,6 @@ namespace Amantis
 	{
 		public:
 			static string GetTimeString();
+			static string CompletePath(const string& path);
 	};
 }

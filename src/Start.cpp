@@ -22,6 +22,7 @@ using namespace std;
 #include <opencv2/opencv.hpp>
 
 // Amantis Includes
+#include "Constants.h"
 #include "StereoFrame.h"
 #include "StereoFrameUtils.h"
 #include "DisplayUtils.h"
@@ -92,9 +93,9 @@ void Callback(const sensor_msgs::ImageConstPtr& image1, const sensor_msgs::Image
       auto smallFrame = StereoFrameUtils::Resize(frame, 1000);
 
       // Save the frame to disk
-      string homeFolder = getenv("HOME"); string suffix = GeneralUtils::GetTimeString();
-      auto baseFolder = stringstream(); baseFolder << homeFolder << "/scans";
-      StereoFrameUtils::Save(smallFrame, baseFolder.str(), suffix, ".jpg");
+      string suffix = GeneralUtils::GetTimeString();
+      auto baseFolder = GeneralUtils::CompletePath(IMAGE_FOLDER);
+      StereoFrameUtils::Save(smallFrame, baseFolder, suffix, ".jpg");
 
       // Pause the screen
       cv::waitKey(30);

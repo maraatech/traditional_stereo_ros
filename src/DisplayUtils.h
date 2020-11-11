@@ -12,6 +12,7 @@ using namespace std;
 #include <opencv2/opencv.hpp>
 
 #include "StereoFrame.h"
+#include "DepthFrame.h"
 
 namespace Amantis
 {
@@ -19,5 +20,7 @@ namespace Amantis
 	{
 	public:
 		static void ShowStereoFrame(const string& caption, StereoFrame* frame, int width);
+		static void ShowDepthFrame(const string& caption, DepthFrame* frame, int width); 
+
 	};
 }

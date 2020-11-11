@@ -21,7 +21,10 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
 
 ## Build the "Start" executable
 add_executable(Start    src/StereoPipeline.cpp
+                        src/SGBM.cpp
+                        src/Math3D.cpp
                         src/LoadUtils.cpp
+                        src/OpticsUtils.cpp
                         src/StereoFrameUtils.cpp
                         src/GeneralUtils.cpp
                         src/DisplayUtils.cpp

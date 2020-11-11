@@ -26,7 +26,8 @@ Calibration* LoadUtils::LoadCalibration(const string& path)
 	Mat D2; reader["Distortion2"] >> D2;
 	Mat R; reader["Rotation"] >> R;
 	Mat T; reader["Translation"] >> T;
+	Size imageSize; reader["ImageSize"] >> imageSize;
 	
-	return new Calibration(K1, K2, D1, D2, R, T);
+	return new Calibration(K1, K2, D1, D2, R, T, imageSize);
 }
 

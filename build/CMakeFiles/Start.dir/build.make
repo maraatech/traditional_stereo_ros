@@ -81,9 +81,57 @@ CMakeFiles/Start.dir/src/StereoPipeline.cpp.o.provides: CMakeFiles/Start.dir/src
 CMakeFiles/Start.dir/src/StereoPipeline.cpp.o.provides.build: CMakeFiles/Start.dir/src/StereoPipeline.cpp.o
 
 
+CMakeFiles/Start.dir/src/SGBM.cpp.o: CMakeFiles/Start.dir/flags.make
+CMakeFiles/Start.dir/src/SGBM.cpp.o: ../src/SGBM.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Start.dir/src/SGBM.cpp.o"
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Start.dir/src/SGBM.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/SGBM.cpp
+
+CMakeFiles/Start.dir/src/SGBM.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Start.dir/src/SGBM.cpp.i"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/SGBM.cpp > CMakeFiles/Start.dir/src/SGBM.cpp.i
+
+CMakeFiles/Start.dir/src/SGBM.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Start.dir/src/SGBM.cpp.s"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/SGBM.cpp -o CMakeFiles/Start.dir/src/SGBM.cpp.s
+
+CMakeFiles/Start.dir/src/SGBM.cpp.o.requires:
+
+.PHONY : CMakeFiles/Start.dir/src/SGBM.cpp.o.requires
+
+CMakeFiles/Start.dir/src/SGBM.cpp.o.provides: CMakeFiles/Start.dir/src/SGBM.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/SGBM.cpp.o.provides.build
+.PHONY : CMakeFiles/Start.dir/src/SGBM.cpp.o.provides
+
+CMakeFiles/Start.dir/src/SGBM.cpp.o.provides.build: CMakeFiles/Start.dir/src/SGBM.cpp.o
+
+
+CMakeFiles/Start.dir/src/Math3D.cpp.o: CMakeFiles/Start.dir/flags.make
+CMakeFiles/Start.dir/src/Math3D.cpp.o: ../src/Math3D.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Start.dir/src/Math3D.cpp.o"
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Start.dir/src/Math3D.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/Math3D.cpp
+
+CMakeFiles/Start.dir/src/Math3D.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Start.dir/src/Math3D.cpp.i"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/Math3D.cpp > CMakeFiles/Start.dir/src/Math3D.cpp.i
+
+CMakeFiles/Start.dir/src/Math3D.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Start.dir/src/Math3D.cpp.s"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/Math3D.cpp -o CMakeFiles/Start.dir/src/Math3D.cpp.s
+
+CMakeFiles/Start.dir/src/Math3D.cpp.o.requires:
+
+.PHONY : CMakeFiles/Start.dir/src/Math3D.cpp.o.requires
+
+CMakeFiles/Start.dir/src/Math3D.cpp.o.provides: CMakeFiles/Start.dir/src/Math3D.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/Math3D.cpp.o.provides.build
+.PHONY : CMakeFiles/Start.dir/src/Math3D.cpp.o.provides
+
+CMakeFiles/Start.dir/src/Math3D.cpp.o.provides.build: CMakeFiles/Start.dir/src/Math3D.cpp.o
+
+
 CMakeFiles/Start.dir/src/LoadUtils.cpp.o: CMakeFiles/Start.dir/flags.make
 CMakeFiles/Start.dir/src/LoadUtils.cpp.o: ../src/LoadUtils.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Start.dir/src/LoadUtils.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Start.dir/src/LoadUtils.cpp.o"
 	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Start.dir/src/LoadUtils.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/LoadUtils.cpp
 
 CMakeFiles/Start.dir/src/LoadUtils.cpp.i: cmake_force
@@ -105,9 +153,33 @@ CMakeFiles/Start.dir/src/LoadUtils.cpp.o.provides: CMakeFiles/Start.dir/src/Load
 CMakeFiles/Start.dir/src/LoadUtils.cpp.o.provides.build: CMakeFiles/Start.dir/src/LoadUtils.cpp.o
 
 
+CMakeFiles/Start.dir/src/OpticsUtils.cpp.o: CMakeFiles/Start.dir/flags.make
+CMakeFiles/Start.dir/src/OpticsUtils.cpp.o: ../src/OpticsUtils.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Start.dir/src/OpticsUtils.cpp.o"
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Start.dir/src/OpticsUtils.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/OpticsUtils.cpp
+
+CMakeFiles/Start.dir/src/OpticsUtils.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Start.dir/src/OpticsUtils.cpp.i"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/OpticsUtils.cpp > CMakeFiles/Start.dir/src/OpticsUtils.cpp.i
+
+CMakeFiles/Start.dir/src/OpticsUtils.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Start.dir/src/OpticsUtils.cpp.s"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/OpticsUtils.cpp -o CMakeFiles/Start.dir/src/OpticsUtils.cpp.s
+
+CMakeFiles/Start.dir/src/OpticsUtils.cpp.o.requires:
+
+.PHONY : CMakeFiles/Start.dir/src/OpticsUtils.cpp.o.requires
+
+CMakeFiles/Start.dir/src/OpticsUtils.cpp.o.provides: CMakeFiles/Start.dir/src/OpticsUtils.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/OpticsUtils.cpp.o.provides.build
+.PHONY : CMakeFiles/Start.dir/src/OpticsUtils.cpp.o.provides
+
+CMakeFiles/Start.dir/src/OpticsUtils.cpp.o.provides.build: CMakeFiles/Start.dir/src/OpticsUtils.cpp.o
+
+
 CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o: CMakeFiles/Start.dir/flags.make
 CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o: ../src/StereoFrameUtils.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o"
 	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/StereoFrameUtils.cpp
 
 CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.i: cmake_force
@@ -131,7 +203,7 @@ CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o.provides.build: CMakeFiles/Start
 
 CMakeFiles/Start.dir/src/GeneralUtils.cpp.o: CMakeFiles/Start.dir/flags.make
 CMakeFiles/Start.dir/src/GeneralUtils.cpp.o: ../src/GeneralUtils.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Start.dir/src/GeneralUtils.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Start.dir/src/GeneralUtils.cpp.o"
 	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Start.dir/src/GeneralUtils.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/GeneralUtils.cpp
 
 CMakeFiles/Start.dir/src/GeneralUtils.cpp.i: cmake_force
@@ -155,7 +227,7 @@ CMakeFiles/Start.dir/src/GeneralUtils.cpp.o.provides.build: CMakeFiles/Start.dir
 
 CMakeFiles/Start.dir/src/DisplayUtils.cpp.o: CMakeFiles/Start.dir/flags.make
 CMakeFiles/Start.dir/src/DisplayUtils.cpp.o: ../src/DisplayUtils.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Start.dir/src/DisplayUtils.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Start.dir/src/DisplayUtils.cpp.o"
 	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Start.dir/src/DisplayUtils.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/DisplayUtils.cpp
 
 CMakeFiles/Start.dir/src/DisplayUtils.cpp.i: cmake_force
@@ -179,7 +251,7 @@ CMakeFiles/Start.dir/src/DisplayUtils.cpp.o.provides.build: CMakeFiles/Start.dir
 
 CMakeFiles/Start.dir/src/Start.cpp.o: CMakeFiles/Start.dir/flags.make
 CMakeFiles/Start.dir/src/Start.cpp.o: ../src/Start.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Start.dir/src/Start.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Start.dir/src/Start.cpp.o"
 	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Start.dir/src/Start.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/Start.cpp
 
 CMakeFiles/Start.dir/src/Start.cpp.i: cmake_force
@@ -204,7 +276,10 @@ CMakeFiles/Start.dir/src/Start.cpp.o.provides.build: CMakeFiles/Start.dir/src/St
 # Object files for target Start
 Start_OBJECTS = \
 "CMakeFiles/Start.dir/src/StereoPipeline.cpp.o" \
+"CMakeFiles/Start.dir/src/SGBM.cpp.o" \
+"CMakeFiles/Start.dir/src/Math3D.cpp.o" \
 "CMakeFiles/Start.dir/src/LoadUtils.cpp.o" \
+"CMakeFiles/Start.dir/src/OpticsUtils.cpp.o" \
 "CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o" \
 "CMakeFiles/Start.dir/src/GeneralUtils.cpp.o" \
 "CMakeFiles/Start.dir/src/DisplayUtils.cpp.o" \
@@ -214,7 +289,10 @@ Start_OBJECTS = \
 Start_EXTERNAL_OBJECTS =
 
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/StereoPipeline.cpp.o
+devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/SGBM.cpp.o
+devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/Math3D.cpp.o
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/LoadUtils.cpp.o
+devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/OpticsUtils.cpp.o
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/GeneralUtils.cpp.o
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/DisplayUtils.cpp.o
@@ -285,7 +363,7 @@ devel/lib/traditional_stereo_ros/Start: /usr/lib/x86_64-linux-gnu/libopencv_imgc
 devel/lib/traditional_stereo_ros/Start: /usr/lib/x86_64-linux-gnu/libopencv_imgproc.so.3.2.0
 devel/lib/traditional_stereo_ros/Start: /usr/lib/x86_64-linux-gnu/libopencv_core.so.3.2.0
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable devel/lib/traditional_stereo_ros/Start"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable devel/lib/traditional_stereo_ros/Start"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Start.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -294,7 +372,10 @@ CMakeFiles/Start.dir/build: devel/lib/traditional_stereo_ros/Start
 .PHONY : CMakeFiles/Start.dir/build
 
 CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/StereoPipeline.cpp.o.requires
+CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/SGBM.cpp.o.requires
+CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/Math3D.cpp.o.requires
 CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/LoadUtils.cpp.o.requires
+CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/OpticsUtils.cpp.o.requires
 CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o.requires
 CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/GeneralUtils.cpp.o.requires
 CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/DisplayUtils.cpp.o.requires

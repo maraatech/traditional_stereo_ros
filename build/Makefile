@@ -886,6 +886,33 @@ src/StereoFrameUtils.cpp.s:
 	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.s
 .PHONY : src/StereoFrameUtils.cpp.s
 
+src/StereoPipeline.o: src/StereoPipeline.cpp.o
+
+.PHONY : src/StereoPipeline.o
+
+# target to build an object file
+src/StereoPipeline.cpp.o:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/StereoPipeline.cpp.o
+.PHONY : src/StereoPipeline.cpp.o
+
+src/StereoPipeline.i: src/StereoPipeline.cpp.i
+
+.PHONY : src/StereoPipeline.i
+
+# target to preprocess a source file
+src/StereoPipeline.cpp.i:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/StereoPipeline.cpp.i
+.PHONY : src/StereoPipeline.cpp.i
+
+src/StereoPipeline.s: src/StereoPipeline.cpp.s
+
+.PHONY : src/StereoPipeline.s
+
+# target to generate assembly for a file
+src/StereoPipeline.cpp.s:
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/StereoPipeline.cpp.s
+.PHONY : src/StereoPipeline.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -958,6 +985,9 @@ help:
 	@echo "... src/StereoFrameUtils.o"
 	@echo "... src/StereoFrameUtils.i"
 	@echo "... src/StereoFrameUtils.s"
+	@echo "... src/StereoPipeline.o"
+	@echo "... src/StereoPipeline.i"
+	@echo "... src/StereoPipeline.s"
 .PHONY : help
 
 

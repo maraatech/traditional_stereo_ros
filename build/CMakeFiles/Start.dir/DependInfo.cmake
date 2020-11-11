@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/anyone/catkin_ws3/src/traditional_stereo_ros/src/GeneralUtils.cpp" "/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles/Start.dir/src/GeneralUtils.cpp.o"
   "/home/anyone/catkin_ws3/src/traditional_stereo_ros/src/Start.cpp" "/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles/Start.dir/src/Start.cpp.o"
   "/home/anyone/catkin_ws3/src/traditional_stereo_ros/src/StereoFrameUtils.cpp" "/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o"
+  "/home/anyone/catkin_ws3/src/traditional_stereo_ros/src/StereoPipeline.cpp" "/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles/Start.dir/src/StereoPipeline.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

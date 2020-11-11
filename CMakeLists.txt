@@ -20,7 +20,8 @@ find_package(OpenCV)
 include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
 
 ## Build the "Start" executable
-add_executable(Start    src/StereoFrameUtils.cpp
+add_executable(Start    src/StereoPipeline.cpp
+                        src/StereoFrameUtils.cpp
                         src/GeneralUtils.cpp
                         src/DisplayUtils.cpp
                         src/Start.cpp

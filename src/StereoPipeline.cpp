@@ -16,7 +16,13 @@ using namespace Amantis;
  */
 StereoPipeline::StereoPipeline()
 {
-    // TODO: Implement this
+    // Load calibration
+    auto calibrationPath = GeneralUtils::CompletePath(CALIBRATION_PATH);
+    _calibration = LoadUtils::LoadCalibration(calibrationPath);
+
+    // Show that the calibration was loaded successfully
+    if (_calibration->LoadSuccess()) ROS_INFO("Calibration successfully loaded!");
+    else ROS_WARN("Calibration loading failed!");
 }
 
 /**
@@ -24,7 +30,7 @@ StereoPipeline::StereoPipeline()
  */ 
 StereoPipeline::~StereoPipeline()
 {
-    // TODO: Implement this
+    delete _calibration;
 }
 
 //----------------------------------------------------------------------------------

@@ -25,6 +25,8 @@ using namespace std;
 
 // Amantis Includes
 #include "Constants.h"
+#include "Calibration.h"
+#include "LoadUtils.h"
 #include "StereoFrame.h"
 #include "StereoFrameUtils.h"
 #include "DisplayUtils.h"
@@ -35,6 +37,8 @@ namespace Amantis
 {
 	class StereoPipeline  
 	{
+		private:
+			Calibration * _calibration;
 		public:
 			StereoPipeline();
 			~StereoPipeline();

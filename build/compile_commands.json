@@ -6,6 +6,11 @@
 },
 {
   "directory": "/home/anyone/catkin_ws3/src/traditional_stereo_ros/build",
+  "command": "/usr/bin/g++-7  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"traditional_stereo_ros\\\" -I/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel/include -I/home/anyone/catkin_ws3/src/traditional_stereo_ros/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -isystem /usr/include/opencv  -g   -o CMakeFiles/Start.dir/src/LoadUtils.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/LoadUtils.cpp",
+  "file": "/home/anyone/catkin_ws3/src/traditional_stereo_ros/src/LoadUtils.cpp"
+},
+{
+  "directory": "/home/anyone/catkin_ws3/src/traditional_stereo_ros/build",
   "command": "/usr/bin/g++-7  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"traditional_stereo_ros\\\" -I/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel/include -I/home/anyone/catkin_ws3/src/traditional_stereo_ros/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -isystem /usr/include/opencv  -g   -o CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/StereoFrameUtils.cpp",
   "file": "/home/anyone/catkin_ws3/src/traditional_stereo_ros/src/StereoFrameUtils.cpp"
 },

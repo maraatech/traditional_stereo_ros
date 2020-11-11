@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 
   // Register the callback
   message_filters::Synchronizer<SyncPolicy> sync(SyncPolicy(10), image1, image2);
-  sync.registerCallback(boost::bind(&Amantis::StereoPipeline::Launch, pipeline, _1, _2));
+  sync.registerCallback(boost::bind(&Amantis::StereoPipeline::Launch, &pipeline, _1, _2));
 
   // Process Loop
   cv::namedWindow("view");

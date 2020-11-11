@@ -1,6 +1,7 @@
 
 //--------------------------------------------------
 // A module for holding constants and helper functions for the application
+// NOTE: THIS SHOULD BE REPLACED BY PARAMETERS
 //
 // @author: Wild Boar
 //--------------------------------------------------
@@ -16,4 +17,4 @@ using namespace std;
 //--------------------------------------------------
 
 constexpr auto IMAGE_FOLDER = "/scans/";
-constexpr auto CALIBRATION_FILE = "/Trevor/Maaratech/Data/Calibration/calibration.xml";
+constexpr auto CALIBRATION_PATH = "/Trevor/Maaratech/Data/Calibration/calibration.xml";

@@ -36,6 +36,7 @@ namespace Amantis
 		inline Mat& GetTranslation() { return _translation; }
 		inline Size& GetImageSize() { return _imageSize; }
 
-		inline bool LoadSuccess() { return !_camera1.empty() && !_camera2.empty() && !_distortion1.empty() && !_distortion2.empty() && !_rotation.empty() && !_translation.empty(); } 	
+		inline bool LoadSuccess() { return !_camera1.empty() && !_camera2.empty() && !_distortion1.empty() && !_distortion2.empty() && !_rotation.empty() && !_translation.empty(); }
+		inline String toString(){ stringstream ss; ss<<_camera1<<_camera2<<_distortion1<<_distortion2<<_translation<<_rotation;return ss.str();} 	
 	};
 }

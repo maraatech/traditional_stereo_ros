@@ -6,5 +6,5 @@ CXX_FLAGS = -g
 
 CXX_DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"traditional_stereo_ros\"
 
-CXX_INCLUDES = -I/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel/include -I/home/anyone/catkin_ws3/src/traditional_stereo_ros/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -isystem /usr/include/opencv 
+CXX_INCLUDES = -I/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/devel/include -I/home/anyone/catkin_ws3/src/traditional_stereo_ros/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -isystem /usr/include/opencv -I/home/anyone/catkin_ws3/devel/.private/maara_msgs/include 
 

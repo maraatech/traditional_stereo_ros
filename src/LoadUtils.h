@@ -11,6 +11,8 @@ using namespace std;
 
 #include <opencv2/opencv.hpp>
 using namespace cv;
+#include "Constants.h"
+#include <maara_msgs/StereoCameraInfo.h>
 
 #include "Calibration.h"
 
@@ -19,6 +21,9 @@ namespace Amantis
 	class LoadUtils
 	{
 	public:
-		static Calibration * LoadCalibration(const string& folder);
+		static Calibration * LoadCalibration(const string& folder, double ratio);
+		static void vector2Mat(std::vector<std::vector<double>>& list, Mat& out);
+		static void vector2Mat(std::vector<double>& list, Mat& out);
+		static Calibration * LoadCalibration(const maara_msgs::StereoCameraInfo ci, double ratio);
 	};
 }

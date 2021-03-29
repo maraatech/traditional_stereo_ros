@@ -249,9 +249,57 @@ CMakeFiles/Start.dir/src/DisplayUtils.cpp.o.provides: CMakeFiles/Start.dir/src/D
 CMakeFiles/Start.dir/src/DisplayUtils.cpp.o.provides.build: CMakeFiles/Start.dir/src/DisplayUtils.cpp.o
 
 
+CMakeFiles/Start.dir/src/CloudUtils.cpp.o: CMakeFiles/Start.dir/flags.make
+CMakeFiles/Start.dir/src/CloudUtils.cpp.o: ../src/CloudUtils.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Start.dir/src/CloudUtils.cpp.o"
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Start.dir/src/CloudUtils.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/CloudUtils.cpp
+
+CMakeFiles/Start.dir/src/CloudUtils.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Start.dir/src/CloudUtils.cpp.i"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/CloudUtils.cpp > CMakeFiles/Start.dir/src/CloudUtils.cpp.i
+
+CMakeFiles/Start.dir/src/CloudUtils.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Start.dir/src/CloudUtils.cpp.s"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/CloudUtils.cpp -o CMakeFiles/Start.dir/src/CloudUtils.cpp.s
+
+CMakeFiles/Start.dir/src/CloudUtils.cpp.o.requires:
+
+.PHONY : CMakeFiles/Start.dir/src/CloudUtils.cpp.o.requires
+
+CMakeFiles/Start.dir/src/CloudUtils.cpp.o.provides: CMakeFiles/Start.dir/src/CloudUtils.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/CloudUtils.cpp.o.provides.build
+.PHONY : CMakeFiles/Start.dir/src/CloudUtils.cpp.o.provides
+
+CMakeFiles/Start.dir/src/CloudUtils.cpp.o.provides.build: CMakeFiles/Start.dir/src/CloudUtils.cpp.o
+
+
+CMakeFiles/Start.dir/src/PointSaver.cpp.o: CMakeFiles/Start.dir/flags.make
+CMakeFiles/Start.dir/src/PointSaver.cpp.o: ../src/PointSaver.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Start.dir/src/PointSaver.cpp.o"
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Start.dir/src/PointSaver.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/PointSaver.cpp
+
+CMakeFiles/Start.dir/src/PointSaver.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Start.dir/src/PointSaver.cpp.i"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/PointSaver.cpp > CMakeFiles/Start.dir/src/PointSaver.cpp.i
+
+CMakeFiles/Start.dir/src/PointSaver.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Start.dir/src/PointSaver.cpp.s"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/PointSaver.cpp -o CMakeFiles/Start.dir/src/PointSaver.cpp.s
+
+CMakeFiles/Start.dir/src/PointSaver.cpp.o.requires:
+
+.PHONY : CMakeFiles/Start.dir/src/PointSaver.cpp.o.requires
+
+CMakeFiles/Start.dir/src/PointSaver.cpp.o.provides: CMakeFiles/Start.dir/src/PointSaver.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Start.dir/build.make CMakeFiles/Start.dir/src/PointSaver.cpp.o.provides.build
+.PHONY : CMakeFiles/Start.dir/src/PointSaver.cpp.o.provides
+
+CMakeFiles/Start.dir/src/PointSaver.cpp.o.provides.build: CMakeFiles/Start.dir/src/PointSaver.cpp.o
+
+
 CMakeFiles/Start.dir/src/Start.cpp.o: CMakeFiles/Start.dir/flags.make
 CMakeFiles/Start.dir/src/Start.cpp.o: ../src/Start.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Start.dir/src/Start.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/Start.dir/src/Start.cpp.o"
 	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Start.dir/src/Start.cpp.o -c /home/anyone/catkin_ws3/src/traditional_stereo_ros/src/Start.cpp
 
 CMakeFiles/Start.dir/src/Start.cpp.i: cmake_force
@@ -283,6 +331,8 @@ Start_OBJECTS = \
 "CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o" \
 "CMakeFiles/Start.dir/src/GeneralUtils.cpp.o" \
 "CMakeFiles/Start.dir/src/DisplayUtils.cpp.o" \
+"CMakeFiles/Start.dir/src/CloudUtils.cpp.o" \
+"CMakeFiles/Start.dir/src/PointSaver.cpp.o" \
 "CMakeFiles/Start.dir/src/Start.cpp.o"
 
 # External object files for target Start
@@ -296,6 +346,8 @@ devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/OpticsUtils.cpp
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/GeneralUtils.cpp.o
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/DisplayUtils.cpp.o
+devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/CloudUtils.cpp.o
+devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/PointSaver.cpp.o
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/src/Start.cpp.o
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/build.make
 devel/lib/traditional_stereo_ros/Start: /opt/ros/melodic/lib/libcv_bridge.so
@@ -363,7 +415,7 @@ devel/lib/traditional_stereo_ros/Start: /usr/lib/x86_64-linux-gnu/libopencv_imgc
 devel/lib/traditional_stereo_ros/Start: /usr/lib/x86_64-linux-gnu/libopencv_imgproc.so.3.2.0
 devel/lib/traditional_stereo_ros/Start: /usr/lib/x86_64-linux-gnu/libopencv_core.so.3.2.0
 devel/lib/traditional_stereo_ros/Start: CMakeFiles/Start.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable devel/lib/traditional_stereo_ros/Start"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/anyone/catkin_ws3/src/traditional_stereo_ros/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable devel/lib/traditional_stereo_ros/Start"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Start.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -379,6 +431,8 @@ CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/OpticsUtils.cpp.o.requir
 CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/StereoFrameUtils.cpp.o.requires
 CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/GeneralUtils.cpp.o.requires
 CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/DisplayUtils.cpp.o.requires
+CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/CloudUtils.cpp.o.requires
+CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/PointSaver.cpp.o.requires
 CMakeFiles/Start.dir/requires: CMakeFiles/Start.dir/src/Start.cpp.o.requires
 
 .PHONY : CMakeFiles/Start.dir/requires

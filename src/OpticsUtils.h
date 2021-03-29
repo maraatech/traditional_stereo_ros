@@ -22,5 +22,6 @@ namespace Amantis
 	public:
 		static RectificationParameters* FindRectification(Calibration* calibration);
 		static Mat ExtractDepthMap(Mat& Q, Mat& disparityMap, double zmin, double zmax);
+		static void SaveRectificationParameters(const string & path, RectificationParameters& parameters);
 	};
 }

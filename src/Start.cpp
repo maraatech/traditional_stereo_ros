@@ -39,10 +39,10 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "image_listener");
 
   // Setup the pipeline
-  auto pipeline = Amantis::StereoPipeline();
+  ros::NodeHandle nh;
+  auto pipeline = Amantis::StereoPipeline(nh);
 
   // Setup the messaging
-  ros::NodeHandle nh;
   message_filters::Subscriber<sensor_msgs::Image> image1(nh, "camera_array/cam1/image_raw", 1);
   message_filters::Subscriber<sensor_msgs::Image> image2(nh, "camera_array/cam2/image_raw", 1);
 

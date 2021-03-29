@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(traditional_stereo_ros)
 
 ## Find catkin and any catkin packages
-find_package(catkin REQUIRED COMPONENTS cv_bridge message_filters message_generation sensor_msgs)
+find_package(catkin REQUIRED COMPONENTS cv_bridge message_filters message_generation sensor_msgs maara_msgs)
 
 ## Declare ROS messages and services
 add_message_files(DIRECTORY msg FILES Image.msg)
@@ -11,7 +11,7 @@ add_message_files(DIRECTORY msg FILES Image.msg)
 generate_messages(DEPENDENCIES sensor_msgs)
 
 ## Declare a catkin package
-catkin_package(CATKIN_DEPENDS cv_bridge message_filters message_runtime sensor_msgs)
+catkin_package(CATKIN_DEPENDS cv_bridge message_filters message_runtime sensor_msgs maara_msgs)
 
 ## Add OpenCV dependencies
 find_package(OpenCV)
@@ -28,6 +28,8 @@ add_executable(Start    src/StereoPipeline.cpp
                         src/StereoFrameUtils.cpp
                         src/GeneralUtils.cpp
                         src/DisplayUtils.cpp
+                        src/CloudUtils.cpp
+                        src/PointSaver.cpp
                         src/Start.cpp
 )
 add_dependencies(Start ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})

@@ -20,7 +20,7 @@ RectificationParameters* OpticsUtils::FindRectification(Calibration* calibration
 {
 	Mat noDistortion = Mat_<double>::zeros(4, 1);
 	Mat R1, R2, P1, P2, Q;
-	stereoRectify(calibration->GetCamera1(), noDistortion, calibration->GetCamera2(), noDistortion, calibration->GetImageSize(), calibration->GetRotation(), calibration->GetTranslation(), R1, R2, P1, P2, Q, CALIB_ZERO_DISPARITY, -1, calibration->GetImageSize());
+	stereoRectify(calibration->GetCamera1(), calibration->GetDistortion1(), calibration->GetCamera2(), calibration->GetDistortion2(), calibration->GetImageSize(), calibration->GetRotation(), calibration->GetTranslation(), R1, R2, P1, P2, Q, CALIB_ZERO_DISPARITY, -1, calibration->GetImageSize());
 	return new RectificationParameters(R1, R2, P1, P2, Q);
 }
 
@@ -64,4 +64,26 @@ Mat OpticsUtils::ExtractDepthMap(Mat& Q, Mat& disparityMap, double zmin, double 
 	}
 
 	return result;
+}
+
+//--------------------------------------------------
+// ExtractDepthMap
+//--------------------------------------------------
+
+/**
+ * A utility for the saving of rectification parameters to disk
+ * @param path The path that we are saving to
+ * @param parameters The parameters that we are saving
+ */
+void OpticsUtils::SaveRectificationParameters(const string & path, RectificationParameters& parameters) 
+{
+	auto writer = cv::FileStorage(path, FileStorage::FORMAT_XML | FileStorage::WRITE);
+
+	writer << "R1" << parameters.GetR1();
+	writer << "R2" << parameters.GetR2();
+	writer << "P1" << parameters.GetP1();
+	writer << "P2" << parameters.GetP2();
+	writer << "Q" << parameters.GetQ();
+
+	writer.release();
 }

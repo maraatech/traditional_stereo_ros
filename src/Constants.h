@@ -16,7 +16,8 @@ using namespace std;
 //--------------------------------------------------
 constexpr auto IMAGE_FOLDER = "/scans/";
 constexpr auto CALIBRATION_PATH = "/Trevor/Maaratech/Data/Calibration/calibration.xml";
-
+constexpr auto CALIBRATION_PATH_JSON = "/scans/11-24/13-52-28/calibration.json";
+//constexpr double RATIO = 0.5;
 //--------------------------------------------------
 // Disparity Range parameters
 //--------------------------------------------------

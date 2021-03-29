@@ -15,6 +15,9 @@ using namespace std;
 
 // Messaging includes
 #include <sensor_msgs/Image.h>
+#include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/point_cloud2_iterator.h>
+#include <maara_msgs/StereoCameraInfo.h>
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/exact_time.h>
@@ -35,6 +38,8 @@ using namespace std;
 #include "StereoFrameUtils.h"
 #include "DisplayUtils.h"
 #include "GeneralUtils.h"
+#include "CloudUtils.h"
+#include "PointSaver.h"
 using namespace Amantis;
 
 namespace Amantis 
@@ -45,16 +50,22 @@ namespace Amantis
 			Calibration * _calibration;
 			RectificationParameters * _rectificationParameters;
 		public:
-			StereoPipeline();
+			StereoPipeline(ros::NodeHandle& _nh);
 			~StereoPipeline();
 
 			void Launch(const sensor_msgs::ImageConstPtr& image1, const sensor_msgs::ImageConstPtr& image2);
 		private:
-			void ProcessFrame(StereoFrame& frame);
-
+		    ros::NodeHandle _nh;
+			ros::Publisher _pc_pub;
+			ros::Publisher _depth_pub;
+			void ProcessFrame(StereoFrame& frame, ros::Time timestamp);
+			void PublishDepthFrame(DepthFrame& frame, ros::Time timestamp);
 			StereoFrame RemoveDistortion(StereoFrame& frame); 
 			StereoFrame PerformRectification(StereoFrame& frame); 
 			DepthFrame PerformStereoMatching(StereoFrame& frame); 
 			DepthFrame PerformDepthExtraction(DepthFrame& frame); 
+			void GenerateModel(DepthFrame& frame, ros::Time timestamp);
+			void LoadCalibrationCallback(const maara_msgs::StereoCameraInfo ci);
+			unsigned int cvtRGB(Vec3i _color);
 	};
 }

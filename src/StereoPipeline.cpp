@@ -14,45 +14,52 @@ using namespace Amantis;
 /**
  * Main constructor
  */
-StereoPipeline::StereoPipeline(ros::NodeHandle& nh) 
-{
-    ROS_INFO("START!");
-    // Load calibration
-    auto calibrationPath = GeneralUtils::CompletePath(CALIBRATION_PATH_JSON);
-    //_calibration = LoadUtils::LoadCalibration(calibrationPath);
-    // _calibration = NULL;
-    ros::Subscriber s = _nh.subscribe<maara_msgs::StereoCameraInfo>("/rectified_image/stereo_info",1,&StereoPipeline::LoadCalibrationCallback,this);
-    ros::Rate loop_rate(0.5);
-    while(this->_calibration == NULL){
-        ROS_INFO("waiting for info");
-        ros::spinOnce();
-        loop_rate.sleep();
-    }
-    loop_rate.sleep();
-    _rectificationParameters = nullptr;
-    this->_nh = nh;
-    this->_pc_pub = this->_nh.advertise<sensor_msgs::PointCloud2>("stereo/points", 1);
-    this->_depth_pub = this->_nh.advertise<sensor_msgs::Image>("stereo/depth", 1);
-   
-    // Show that the calibration was loaded successfully
-    if (_calibration->LoadSuccess()) ROS_INFO("Calibration successfully loaded!");
-    else ROS_WARN("Calibration loading failed!");
-
-    // Load the rectification parameters if the calibraiton was loaded
-    if (_calibration->LoadSuccess()) 
-    {
-        _rectificationParameters = OpticsUtils::FindRectification(_calibration);
-        auto path = stringstream(); path << IMAGE_FOLDER << "rectification.xml";
-        std::cout<<path.str()<<std::endl;
-        OpticsUtils::SaveRectificationParameters(path.str(), *_rectificationParameters);
-    }
+StereoPipeline::StereoPipeline(std::string point_cloud_node, std::string depth_node){
+  ros::NodeHandle nh;
+  this->_pc_pub    = nh.advertise<sensor_msgs::PointCloud2>(point_cloud_node, 1);
+  this->_depth_pub = nh.advertise<sensor_msgs::Image>(depth_node, 1);
 }
 
-void StereoPipeline::LoadCalibrationCallback(const maara_msgs::StereoCameraInfo ci){
-    ROS_INFO("GOT INFO!");
-    double RATIO = 1000.0/ci.left_info.width;
-    this->_calibration = LoadUtils::LoadCalibration(ci,RATIO);
-    ROS_INFO("DONE!");
+void StereoPipeline::setCalibration(const cares_msgs::StereoCameraInfo stereo_info, double ratio) {
+  //Load calibration
+  this->_calibration = LoadCalibration(stereo_info, ratio);
+  this->_rectificationParameters = nullptr;
+
+  // Show that the calibration was loaded successfully
+  if (_calibration->LoadSuccess()) ROS_INFO("Calibration successfully loaded!");
+  else ROS_ERROR("Calibration loading failed!");
+
+  // Load the rectification parameters if the calibration was loaded
+  if (_calibration->LoadSuccess()){
+    _rectificationParameters = OpticsUtils::FindRectification(_calibration);
+  }
+}
+
+Calibration* StereoPipeline::LoadCalibration(const cares_msgs::StereoCameraInfo stereo_info, double ratio){
+  Size imageSize(stereo_info.left_info.width * ratio, stereo_info.left_info.width * ratio);
+  cv::Mat K1_tmp(3, 3, CV_64FC1, (void *) stereo_info.left_info.K.data());
+  cv::Mat K1 = K1_tmp.clone();
+  K1 = K1*ratio;
+  ((double *)K1.data)[8] = 1.0;
+  cv::Mat K2_tmp(3, 3, CV_64FC1, (void *) stereo_info.right_info.K.data());
+  cv::Mat K2 = K2_tmp.clone();
+  K2 = K2*ratio;
+  ((double *)K2.data)[8] = 1.0;
+  cv::Mat D1_tmp(1, 5, CV_64FC1, (void *) stereo_info.left_info.D.data());
+  cv::Mat D1 = D1_tmp.clone();
+  cv::Mat D2_tmp(1, 5, CV_64FC1, (void *) stereo_info.right_info.D.data());
+  cv::Mat D2 = D2_tmp.clone();
+  cv::Mat T_tmp(3, 1, CV_64FC1, (void *) stereo_info.T_left_right.data());
+  cv::Mat T = T_tmp.clone();
+//  T= T*1000.0;
+  cv::Mat R_tmp(3, 3, CV_64FC1, (void *) stereo_info.R_left_right.data());
+  cv::Mat R = R_tmp.clone();
+  // R= R*-1.0;
+  // ((double *)R.data)[0] = ((double *)R.data)[0] * -1.0;
+  // ((double *)R.data)[4] = ((double *)R.data)[4] * -1.0;
+  // ((double *)R.data)[8] = ((double *)R.data)[8] * -1.0;
+  std::cout<<K1<<K2<<D1<<D2<<T<<R<<std::endl;
+  return new Calibration(K1, K2, D1, D2, R, T, imageSize);
 }
 
 /**
@@ -73,25 +80,29 @@ StereoPipeline::~StereoPipeline()
  * @param image1 The first image passed to the system
  * @param image2 The second image passed to the system
  */
-void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& image1, const sensor_msgs::ImageConstPtr& image2)
+void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
+                            const sensor_msgs::ImageConstPtr& right_image_msg,
+                            const cares_msgs::StereoCameraInfoConstPtr& stereo_info)
 {
   try
   {
+      this->setCalibration(*stereo_info, 1.0);
       // Retrieve the raw images
-      cv::Mat rawImage1 = cv_bridge::toCvShare(image1, "bgr8")->image;
-      cv::Mat rawImage2 = cv_bridge::toCvShare(image2, "bgr8")->image;
+      cv::Mat left_image  = cv_bridge::toCvShare(left_image_msg, "bgr8")->image;
+      cv::Mat right_image = cv_bridge::toCvShare(right_image_msg, "bgr8")->image;
       
       //extract the timestamp
-      auto timeStamp = image1->header.stamp;
+      auto timeStamp = left_image_msg->header.stamp;
 
       // Build a stereo frame
-      auto frame = StereoFrame(rawImage1, rawImage2);
+      auto frame = StereoFrame(left_image, right_image);
 
       // Make a small frame
-      auto smallFrame = StereoFrameUtils::Resize(frame, 1000);
+//      auto smallFrame = StereoFrameUtils::Resize(frame, 1000);
 
       // Process the stereo frame
-      ProcessFrame(smallFrame, timeStamp);  
+//      ProcessFrame(smallFrame, timeStamp);
+      ProcessFrame(frame, timeStamp);
   }
   catch (cv_bridge::Exception& e)
   {
@@ -127,8 +138,7 @@ void StereoPipeline::ProcessFrame(StereoFrame& frame, ros::Time timestamp)
 void StereoPipeline::PublishDepthFrame(DepthFrame& frame, ros::Time timestamp)
 {
     cv_bridge::CvImagePtr cv_ptr;
-    try
-    {
+    try{
       auto header = std_msgs::Header();
       header.stamp= timestamp;
       this->_depth_pub.publish(cv_bridge::CvImage(header, "32FC1", frame.Depth()/1000.0).toImageMsg());
@@ -267,14 +277,10 @@ void StereoPipeline::GenerateModel(DepthFrame& frame,ros::Time timestamp)
         ++iter_b;
     }
     this->_pc_pub.publish(pc_msgs);
-    // Save the Cloud to scans
-    //auto savePath = stringstream(); savePath << GeneralUtils::CompletePath(IMAGE_FOLDER) << GeneralUtils::GetTimeString() << ".ply";
-    //auto cloudWriter = PointSaver(); cloudWriter.AddPointSet(pointCloud);
-    //cloudWriter.Save(savePath.str());
 }
 
 unsigned int StereoPipeline::cvtRGB(Vec3i _color){
    uint out =0;
    out = (_color[0])+((_color[1])<<8)+(_color[2]<<16);
    return out; 
-}  
+}

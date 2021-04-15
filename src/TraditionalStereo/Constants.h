@@ -3,7 +3,14 @@
 // A module for holding constants and helper functions for the application
 // NOTE: THIS SHOULD BE REPLACED BY PARAMETERS
 //
-// @author: Wild Boar
+// @author: Wild Boar//  if(!nh_private.getParam(CARES::TraditionalStereo::LEFT_IAMGE_S, left_image)){
+//    ROS_ERROR((ARES::TraditionalStereo::LEFT_IAMGE_S+" not set.").c_str());
+//    return 0;
+//  }
+//  if(!nh_private.getParam(ARES::TraditionalStereo::RIGHT_IAMGE_S, right_image)){
+//    ROS_ERROR((ARES::TraditionalStereo::RIGHT_IAMGE_S+" not set.").c_str());
+//    return 0;
+//  }
 //--------------------------------------------------
 
 #pragma once

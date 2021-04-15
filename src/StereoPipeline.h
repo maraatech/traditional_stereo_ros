@@ -17,7 +17,7 @@ using namespace std;
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/point_cloud2_iterator.h>
-#include <maara_msgs/StereoCameraInfo.h>
+#include <cares_msgs/StereoCameraInfo.h>
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/exact_time.h>
@@ -27,22 +27,22 @@ using namespace std;
 #include <opencv2/opencv.hpp>
 
 // Amantis Includes
-#include "Constants.h"
-#include "DepthFrame.h"
-#include "Calibration.h"
-#include "Math3D.h"
-#include "SGBM.h"
-#include "LoadUtils.h"
-#include "StereoFrame.h"
-#include "OpticsUtils.h"
-#include "StereoFrameUtils.h"
-#include "DisplayUtils.h"
-#include "GeneralUtils.h"
-#include "CloudUtils.h"
-#include "PointSaver.h"
+#include "TraditionalStereo/Constants.h"
+#include "TraditionalStereo/DepthFrame.h"
+#include "TraditionalStereo/Calibration.h"
+#include "TraditionalStereo/Math3D.h"
+#include "TraditionalStereo/SGBM.h"
+#include "TraditionalStereo/LoadUtils.h"
+#include "TraditionalStereo/StereoFrame.h"
+#include "TraditionalStereo/OpticsUtils.h"
+#include "TraditionalStereo/StereoFrameUtils.h"
+#include "TraditionalStereo/DisplayUtils.h"
+#include "TraditionalStereo/GeneralUtils.h"
+#include "TraditionalStereo/CloudUtils.h"
+#include "TraditionalStereo/PointSaver.h"
 using namespace Amantis;
 
-namespace Amantis 
+namespace Amantis
 {
 	class StereoPipeline  
 	{
@@ -50,12 +50,13 @@ namespace Amantis
 			Calibration * _calibration;
 			RectificationParameters * _rectificationParameters;
 		public:
-			StereoPipeline(ros::NodeHandle& _nh);
+			StereoPipeline(std::string point_cloud_node, std::string depth_node);
 			~StereoPipeline();
 
-			void Launch(const sensor_msgs::ImageConstPtr& image1, const sensor_msgs::ImageConstPtr& image2);
+			void Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
+                  const sensor_msgs::ImageConstPtr& right_image_msg,
+                  const cares_msgs::StereoCameraInfoConstPtr& stereo_info);
 		private:
-		    ros::NodeHandle _nh;
 			ros::Publisher _pc_pub;
 			ros::Publisher _depth_pub;
 			void ProcessFrame(StereoFrame& frame, ros::Time timestamp);
@@ -65,7 +66,8 @@ namespace Amantis
 			DepthFrame PerformStereoMatching(StereoFrame& frame); 
 			DepthFrame PerformDepthExtraction(DepthFrame& frame); 
 			void GenerateModel(DepthFrame& frame, ros::Time timestamp);
-			void LoadCalibrationCallback(const maara_msgs::StereoCameraInfo ci);
+			void setCalibration(const cares_msgs::StereoCameraInfo stereo_info, double ratio);
+      Calibration* LoadCalibration(const cares_msgs::StereoCameraInfo stereo_info, double ratio);
 			unsigned int cvtRGB(Vec3i _color);
 	};
 }

@@ -18,6 +18,7 @@
   <build_depend>libopencv-dev</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>maara_msgs</build_depend>
+  <build_depend>cares_msgs</build_depend>
   <!-- Dependences for execution -->
   <run_depend>cv_bridge</run_depend>
   <run_depend>message_filters</run_depend>
@@ -25,5 +26,5 @@
   <run_depend>libopencv-dev</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>maara_msgs</run_depend>
-
+  <run_depend>cares_msgs</run_depend>
 </package>

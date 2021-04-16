@@ -5,6 +5,7 @@
     <arg name="stereo_info" default="left_right/stereo_info"/>
     <arg name="point_cloud" default="left_right/point_cloud"/>
     <arg name="depth_image" default="left_right/depth_image"/>
+    <arg name="scale"       default="1.0"/>
 
     <node name="traditional_stereo" pkg="traditional_stereo_ros" type="traditional_stereo" output="screen">
         <param name ="left_image"   value="$(arg left_image)"/>
@@ -12,6 +13,6 @@
         <param name ="stereo_info"  value="$(arg stereo_info)"/>
         <param name ="point_cloud"  value="$(arg point_cloud)"/>
         <param name ="depth_image"  value="$(arg depth_image)"/>
-
+        <param name ="scale"        value="$(arg scale)"/>
     </node>
 </launch>

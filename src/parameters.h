@@ -13,6 +13,8 @@ namespace CARES{
 
         const std::string POINT_CLOUD_S = "point_cloud";
         const std::string DEPTH_IMAGE_S = "depth_image";
+
+        const std::string SCALE_D = "scale";
     }
 }
 

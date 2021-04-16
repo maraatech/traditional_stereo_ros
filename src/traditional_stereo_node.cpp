@@ -52,8 +52,14 @@ int main(int argc, char **argv)
     ROS_ERROR((CARES::TraditionalStereo::RIGHT_IMAGE_S+" not set.").c_str());
     return 0;
   }
+  double scale = 1.0;
+  nh_private.param(CARES::TraditionalStereo::SCALE_D, scale, 1.0);
+  if(scale <= 0){
+    ROS_ERROR("Scale set to or below 0");
+    exit(1);
+  }
 
-  StereoPipeline pipeline = Amantis::StereoPipeline(point_cloud, depth_image);
+  StereoPipeline pipeline = Amantis::StereoPipeline(point_cloud, depth_image, scale);
 
   std::string left_image, right_image, stereo_info;
   if(!nh_private.getParam(CARES::TraditionalStereo::LEFT_IMAGE_S, left_image)){

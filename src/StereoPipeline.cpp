@@ -14,8 +14,9 @@ using namespace Amantis;
 /**
  * Main constructor
  */
-StereoPipeline::StereoPipeline(std::string point_cloud_node, std::string depth_node){
+StereoPipeline::StereoPipeline(std::string point_cloud_node, std::string depth_node, double scale){
   ros::NodeHandle nh;
+  this->scale = scale;
   this->_pc_pub    = nh.advertise<sensor_msgs::PointCloud2>(point_cloud_node, 1);
   this->_depth_pub = nh.advertise<sensor_msgs::Image>(depth_node, 1);
 }
@@ -58,7 +59,7 @@ Calibration* StereoPipeline::LoadCalibration(const cares_msgs::StereoCameraInfo 
   // ((double *)R.data)[0] = ((double *)R.data)[0] * -1.0;
   // ((double *)R.data)[4] = ((double *)R.data)[4] * -1.0;
   // ((double *)R.data)[8] = ((double *)R.data)[8] * -1.0;
-  std::cout<<K1<<K2<<D1<<D2<<T<<R<<std::endl;
+//  std::cout<<K1<<K2<<D1<<D2<<T<<R<<std::endl;
   return new Calibration(K1, K2, D1, D2, R, T, imageSize);
 }
 
@@ -86,7 +87,7 @@ void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
 {
   try
   {
-      this->setCalibration(*stereo_info, 1.0);
+      this->setCalibration(*stereo_info, this->scale);
       // Retrieve the raw images
       cv::Mat left_image  = cv_bridge::toCvShare(left_image_msg, "bgr8")->image;
       cv::Mat right_image = cv_bridge::toCvShare(right_image_msg, "bgr8")->image;

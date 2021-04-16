@@ -47,10 +47,11 @@ namespace Amantis
 	class StereoPipeline  
 	{
 		private:
+	    double scale;
 			Calibration * _calibration;
 			RectificationParameters * _rectificationParameters;
 		public:
-			StereoPipeline(std::string point_cloud_node, std::string depth_node);
+			StereoPipeline(std::string point_cloud_node, std::string depth_node,double scale=1.0);
 			~StereoPipeline();
 
 			void Launch(const sensor_msgs::ImageConstPtr& left_image_msg,

@@ -46,17 +46,17 @@ int main(int argc, char **argv)
   std::string point_cloud, depth_image;
   if(!nh_private.getParam(CARES::TraditionalStereo::POINT_CLOUD_S, point_cloud)){
     ROS_ERROR((CARES::TraditionalStereo::LEFT_IMAGE_S+" not set.").c_str());
-    return 0;
+    return EXIT_FAILURE;
   }
   if(!nh_private.getParam(CARES::TraditionalStereo::DEPTH_IMAGE_S, depth_image)){
     ROS_ERROR((CARES::TraditionalStereo::RIGHT_IMAGE_S+" not set.").c_str());
-    return 0;
+    return EXIT_FAILURE;
   }
   double scale = 1.0;
   nh_private.param(CARES::TraditionalStereo::SCALE_D, scale, 1.0);
   if(scale <= 0){
     ROS_ERROR("Scale set to or below 0");
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 
   StereoPipeline pipeline = Amantis::StereoPipeline(point_cloud, depth_image, scale);
@@ -64,15 +64,15 @@ int main(int argc, char **argv)
   std::string left_image, right_image, stereo_info;
   if(!nh_private.getParam(CARES::TraditionalStereo::LEFT_IMAGE_S, left_image)){
     ROS_ERROR((CARES::TraditionalStereo::LEFT_IMAGE_S+" not set.").c_str());
-    return 0;
+    return EXIT_FAILURE;
   }
   if(!nh_private.getParam(CARES::TraditionalStereo::RIGHT_IMAGE_S, right_image)){
     ROS_ERROR((CARES::TraditionalStereo::RIGHT_IMAGE_S+" not set.").c_str());
-    return 0;
+    return EXIT_FAILURE;
   }
   if(!nh_private.getParam(CARES::TraditionalStereo::STEREO_INFO_S, stereo_info)){
     ROS_ERROR((CARES::TraditionalStereo::STEREO_INFO_S+" not set.").c_str());
-    return 0;
+    return EXIT_FAILURE;
   }
 
   // Setup the messaging

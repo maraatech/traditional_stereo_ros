@@ -7,7 +7,6 @@ find_package(catkin REQUIRED COMPONENTS
         message_filters
         message_generation
         sensor_msgs
-        maara_msgs
         cares_msgs)
 
 ## Declare ROS messages and services
@@ -17,7 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 generate_messages(DEPENDENCIES sensor_msgs)
 
 ## Declare a catkin package
-catkin_package(CATKIN_DEPENDS cv_bridge message_filters message_runtime sensor_msgs maara_msgs)
+catkin_package(CATKIN_DEPENDS cv_bridge message_filters message_runtime sensor_msgs)
 
 ## Add OpenCV dependencies
 find_package(OpenCV)

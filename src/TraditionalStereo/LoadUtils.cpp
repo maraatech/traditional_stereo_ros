@@ -81,7 +81,7 @@ void LoadUtils::vector2Mat(std::vector<double>& list, Mat& out){
 	return;
 }
 
-Calibration * LoadUtils::LoadCalibration(const maara_msgs::StereoCameraInfo ci,double ratio){
+Calibration * LoadUtils::LoadCalibration(const cares_msgs::StereoCameraInfo ci,double ratio){
 	Size imageSize(ci.left_info.width*ratio,ci.left_info.width*ratio);
 	cv::Mat K1_tmp(3, 3, CV_64FC1, (void *) ci.left_info.K.data());
 	cv::Mat K1 = K1_tmp.clone(); 

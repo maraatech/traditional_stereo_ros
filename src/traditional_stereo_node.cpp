@@ -58,7 +58,8 @@ int main(int argc, char **argv)
     ROS_ERROR("Scale set to or below 0");
     exit(EXIT_FAILURE);
   }
-
+  ROS_INFO("%s", point_cloud.c_str());
+  ROS_INFO("%s", depth_image.c_str());
   StereoPipeline pipeline = Amantis::StereoPipeline(point_cloud, depth_image, scale);
 
   std::string left_image, right_image, stereo_info;
@@ -81,7 +82,7 @@ int main(int argc, char **argv)
   message_filters::Subscriber<cares_msgs::StereoCameraInfo> stereo_info_sub(nh, stereo_info, 1);
 
   // Register the callback
-  message_filters::Synchronizer<SyncPolicy> sync(SyncPolicy(10), left_image_sub, right_image_sub, stereo_info_sub);
+  message_filters::Synchronizer<SyncPolicy> sync(SyncPolicy(1), left_image_sub, right_image_sub, stereo_info_sub);
   sync.registerCallback(boost::bind(&StereoPipeline::Launch, &pipeline, _1, _2, _3));
 
   // Process Loop

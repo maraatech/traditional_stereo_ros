@@ -14,7 +14,7 @@ What things you need to install the software and how to install them
 
 2) Pull master version of cares_msgs
     a) cd ~/catkin_ws/src
-    b) git clone https://github.com/UoA-CARES/cares_msgs.git  <run_depend>maara_msgs</run_depend>
+    b) git clone https://github.com/UoA-CARES/cares_msgs.git
 
 3) Compile both libraries
     a) cd ~/catkin_ws

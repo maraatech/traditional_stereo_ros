@@ -12,57 +12,19 @@ using namespace Amantis;
 //--------------------------------------------------
 
 /**
- * Main constructor
+ * @brief Main constructor
+ * @param cloudNodeName The name of the ros_node holding the point cloud
+ * @param depthNodeName The name of the ros_node holding the depth information
+ * @param scale The scaling factor that we want to scale the images by
  */
-StereoPipeline::StereoPipeline(std::string point_cloud_node, std::string depth_node, double scale){
+StereoPipeline::StereoPipeline(const string& cloudNodeName, const string & depthNodeName, double scale)
+{
+  _scale = scale;
+  _rectificationParameters = nullptr;
   ros::NodeHandle nh;
-  this->scale = scale;
-  this->_pc_pub    = nh.advertise<sensor_msgs::PointCloud2>(point_cloud_node, 1);
-  this->_depth_pub = nh.advertise<sensor_msgs::Image>(depth_node, 1);
+  _pointCloudPublisher = nh.advertise<sensor_msgs::PointCloud2>(cloudNodeName, 1);
+  _depthPublisher = nh.advertise<sensor_msgs::Image>(depthNodeName, 1);
 }
-
-void StereoPipeline::setCalibration(const cares_msgs::StereoCameraInfo stereo_info, double ratio) {
-  //Load calibration
-  this->_calibration = LoadCalibration(stereo_info, ratio);
-  this->_rectificationParameters = nullptr;
-
-  // Show that the calibration was loaded successfully
-  if (_calibration->LoadSuccess()) ROS_INFO("Calibration successfully loaded!");
-  else ROS_ERROR("Calibration loading failed!");
-
-  // Load the rectification parameters if the calibration was loaded
-  if (_calibration->LoadSuccess()){
-    _rectificationParameters = OpticsUtils::FindRectification(_calibration);
-  }
-}
-
-Calibration* StereoPipeline::LoadCalibration(const cares_msgs::StereoCameraInfo stereo_info, double ratio){
-  Size imageSize(stereo_info.left_info.width * ratio, stereo_info.left_info.width * ratio);
-  cv::Mat K1_tmp(3, 3, CV_64FC1, (void *) stereo_info.left_info.K.data());
-  cv::Mat K1 = K1_tmp.clone();
-  K1 = K1*ratio;
-  ((double *)K1.data)[8] = 1.0;
-  cv::Mat K2_tmp(3, 3, CV_64FC1, (void *) stereo_info.right_info.K.data());
-  cv::Mat K2 = K2_tmp.clone();
-  K2 = K2*ratio;
-  ((double *)K2.data)[8] = 1.0;
-  cv::Mat D1_tmp(1, 5, CV_64FC1, (void *) stereo_info.left_info.D.data());
-  cv::Mat D1 = D1_tmp.clone();
-  cv::Mat D2_tmp(1, 5, CV_64FC1, (void *) stereo_info.right_info.D.data());
-  cv::Mat D2 = D2_tmp.clone();
-  cv::Mat T_tmp(3, 1, CV_64FC1, (void *) stereo_info.T_left_right.data());
-  cv::Mat T = T_tmp.clone();
-//  T= T*1000.0;
-  cv::Mat R_tmp(3, 3, CV_64FC1, (void *) stereo_info.R_left_right.data());
-  cv::Mat R = R_tmp.clone();
-  // R= R*-1.0;
-  // ((double *)R.data)[0] = ((double *)R.data)[0] * -1.0;
-  // ((double *)R.data)[4] = ((double *)R.data)[4] * -1.0;
-  // ((double *)R.data)[8] = ((double *)R.data)[8] * -1.0;
-//  std::cout<<K1<<K2<<D1<<D2<<T<<R<<std::endl;
-  return new Calibration(K1, K2, D1, D2, R, T, imageSize);
-}
-
 /**
  * Main Terminator
  */ 
@@ -80,6 +42,7 @@ StereoPipeline::~StereoPipeline()
  * Handles the image callback
  * @param image1 The first image passed to the system
  * @param image2 The second image passed to the system
+ * @param stereo_info The incoming stereo information
  */
 void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
                             const sensor_msgs::ImageConstPtr& right_image_msg,
@@ -87,23 +50,38 @@ void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
 {
   try
   {
-      this->setCalibration(*stereo_info, this->scale);
+      // Set the calibration based on the incoming stereo info
+      ros::Duration end;
+      double ns_to_ms = 1000000.0;
+      ros::Time start_calibration = ros::Time::now();
+      SetCalibration(*stereo_info, _scale);
+      end = ros::Time::now() - start_calibration;
+      ROS_INFO("Calibration Setup: %f", end.nsec/ns_to_ms);
+
       // Retrieve the raw images
       cv::Mat left_image  = cv_bridge::toCvShare(left_image_msg, "bgr8")->image;
       cv::Mat right_image = cv_bridge::toCvShare(right_image_msg, "bgr8")->image;
       
-      //extract the timestamp
+      // Extract the timestamp
       auto timeStamp = left_image_msg->header.stamp;
 
       // Build a stereo frame
+      ros::Time start_frame = ros::Time::now();
       auto frame = StereoFrame(left_image, right_image);
+      end = ros::Time::now() - start_frame;
+      ROS_INFO("Frame Setup: %f", end.nsec/ns_to_ms);
 
-      // Make a small frame
-//      auto smallFrame = StereoFrameUtils::Resize(frame, 1000);
+      // NOTE: Enable and use this if we want to use the scaling factor
+      //auto smallFrame = StereoFrameUtils::Resize(frame, 1000);
 
-      // Process the stereo frame
-//      ProcessFrame(smallFrame, timeStamp);
+      // Launch the stereo processing pipeline to process the frame
+      ros::Time start_process = ros::Time::now();
       ProcessFrame(frame, timeStamp);
+      end = ros::Time::now() - start_process;
+      ROS_INFO("Process: %f", end.nsec/ns_to_ms);
+
+      end = ros::Time::now() - start_calibration;
+      ROS_INFO("Total: %f", end.nsec/ns_to_ms);
   }
   catch (cv_bridge::Exception& e)
   {
@@ -116,39 +94,106 @@ void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
 }
 
 //----------------------------------------------------------------------------------
-// Main Processing Logic
+// Load the calibration
+//----------------------------------------------------------------------------------
+
+/**
+ * @brief Set the calibration from the ROS message
+ * @param stereo_info The stereo information
+ * @param ratio The scaling factor
+ */
+void StereoPipeline::SetCalibration(const cares_msgs::StereoCameraInfo & stereo_info, double ratio)
+{
+  //Load calibration
+  this->_calibration = LoadCalibration(stereo_info, ratio);
+   if (_calibration->LoadSuccess()) ROS_INFO("Calibration successfully loaded!");
+  else ROS_ERROR("Calibration loading failed!");
+
+  // Load the rectification parameters if the calibration was loaded
+  if (_calibration->LoadSuccess()) _rectificationParameters = OpticsUtils::FindRectification(_calibration);
+}
+
+/**
+ * @brief Calibration loading helper
+ * @param stereo_info The incoming stereo information
+ * @param ratio The scaling factor
+ * @return The loaded stereo information
+ */
+Calibration* StereoPipeline::LoadCalibration(const cares_msgs::StereoCameraInfo& stereo_info, double ratio)
+{
+    // Determine the image size
+     Size imageSize(stereo_info.left_info.width, stereo_info.left_info.height);
+
+    // Load and create the camera matrix for the left camera
+    cv::Mat K1_tmp(3, 3, CV_64FC1, (void *) stereo_info.left_info.K.data());
+    cv::Mat K1 = K1_tmp.clone();
+    //K1 = K1 * ratio;
+    //((double *)K1.data)[8] = 1.0;
+
+    // Load and create the camera matrix for the right camera
+    cv::Mat K2_tmp(3, 3, CV_64FC1, (void *) stereo_info.right_info.K.data());
+    cv::Mat K2 = K2_tmp.clone();
+    //K2 = K2 * ratio;
+    //((double *)K2.data)[8] = 1.0;
+
+    // Load the distortion for the left camera
+    cv::Mat D1_tmp(1, stereo_info.left_info.D.size(), CV_64FC1, (void *) stereo_info.left_info.D.data());
+    cv::Mat D1 = D1_tmp.clone();
+
+    // Load the distortion for the right camera
+    cv::Mat D2_tmp(1, stereo_info.right_info.D.size(), CV_64FC1, (void *) stereo_info.right_info.D.data());
+    cv::Mat D2 = D2_tmp.clone();
+
+    // Load the translation
+    cv::Mat T_tmp(3, 1, CV_64FC1, (void *) stereo_info.T_left_right.data());
+    cv::Mat T = T_tmp.clone();
+
+    // Load the rotation
+    cv::Mat R_tmp(3, 3, CV_64FC1, (void *) stereo_info.R_left_right.data());
+    cv::Mat R = R_tmp.clone();
+
+    // Return the calibration details
+    return new Calibration( K1, K2, D1, D2, R, T, imageSize);
+}
+
+//----------------------------------------------------------------------------------
+// Processing Logic
 //----------------------------------------------------------------------------------
 
 /**
  * The main processing pipeline logic goes here
  * @param frame The frame that we are processing
+ * @param timestamp The current ROS timestamp for saving the frame
  */
-void StereoPipeline::ProcessFrame(StereoFrame& frame, ros::Time timestamp) 
+void StereoPipeline::ProcessFrame(StereoFrame& frame, ros::Time& timestamp)
 {
-    if (!_calibration->LoadSuccess()) return;
-    auto uframe = RemoveDistortion(frame);
-    auto rframe = PerformRectification(uframe);
-    auto dispframe = PerformStereoMatching(rframe);  
-    auto depthframe = PerformDepthExtraction(dispframe);
-    PublishDepthFrame(depthframe, timestamp);
-    DisplayUtils::ShowDepthFrame("Frame", &depthframe, 1000);
-    GenerateModel(depthframe, timestamp);
-    cv::waitKey(30);
-}
+    // Confirm that the calibration was loaded succesfully
+    if (!_calibration->LoadSuccess()) throw "Calibration was not loaded succesfully";
 
-void StereoPipeline::PublishDepthFrame(DepthFrame& frame, ros::Time timestamp)
-{
-    cv_bridge::CvImagePtr cv_ptr;
-    try{
-      auto header = std_msgs::Header();
-      header.stamp= timestamp;
-      this->_depth_pub.publish(cv_bridge::CvImage(header, "32FC1", frame.Depth()/1000.0).toImageMsg());
-    }
-    catch (cv_bridge::Exception& e)
-    {
-      ROS_ERROR("cv_bridge exception: %s", e.what());
-      return;
-    }
+    // Remove the distortion from the frame
+    auto uframe = RemoveDistortion(frame);
+
+    // Rectify the frame
+    auto rframe = PerformRectification(uframe);
+
+    // Calculate a disparity map for the frame
+    auto dispFrame = PerformStereoMatching(rframe);
+    DisplayUtils::ShowDepthFrame("Disparity", &dispFrame, 1000);
+
+    // Convert the disparity map into a depth map
+    auto depthFrame = PerformDepthExtraction(dispFrame);
+
+    // Show the depth frame for debug purposes
+    Mat depth = depthFrame.Depth() * 2;
+    auto scaledDepth = DepthFrame(depthFrame.Color(), depth);
+    DisplayUtils::ShowDepthFrame("Frame", &scaledDepth, 1000);
+    cv::waitKey(30);
+
+    // Publish the depth frame to ROS
+    PublishDepthFrame(depthFrame, timestamp);
+
+    // Generate the point cloud and publish it to ROS
+    GenerateAndPublishPointCloud(depthFrame, timestamp);
 }
 
 //--------------------------------------------------
@@ -162,7 +207,7 @@ void StereoPipeline::PublishDepthFrame(DepthFrame& frame, ros::Time timestamp)
  */
 StereoFrame StereoPipeline::RemoveDistortion(StereoFrame & frame) 
 {
-    //ROS_INFO("Removing distortion from the stereo pair");
+    ROS_INFO("Removing distortion from the stereo pair");
     auto result = StereoFrameUtils::Undistort(_calibration, frame);
     return result;
 }
@@ -178,7 +223,7 @@ StereoFrame StereoPipeline::RemoveDistortion(StereoFrame & frame)
  */
 StereoFrame StereoPipeline::PerformRectification(StereoFrame & frame) 
 {
-    //ROS_INFO("Performing Rectification");
+    ROS_INFO("Performing Rectification");
     auto result = StereoFrameUtils::RectifyFrames(_calibration, _rectificationParameters, frame);
     return result;
 }
@@ -188,25 +233,16 @@ StereoFrame StereoPipeline::PerformRectification(StereoFrame & frame)
 //--------------------------------------------------
 
 /**
+ * WARNING: THE DISPARITY RANGE HAS BEEN HARD CODED!!!!
  * Add the logic to perform stereo matching 
  * @param frame The frame that we are matching
- * @return The depthframe result
+ * @return The depth frame result
  */
 DepthFrame StereoPipeline::PerformStereoMatching(StereoFrame & frame) 
 {
-    //ROS_INFO("Determining disparity ranges");
-    //auto disparityMin = Math3D::FindDisparity(_rectificationParameters->GetQ(), MAX_DEPTH, false);
-    //auto disparityMax = Math3D::FindDisparity(_rectificationParameters->GetQ(), MIN_DEPTH, true);
-
-    //if (disparityMax == INFINITY || disparityMin == INFINITY) throw string("Either ZMIN or ZMAX (or both) has not been set (or set to zero)");
- 
-    //ROS_INFO("Disparity Min = %f", disparityMin);
-    //ROS_INFO("Disparity Max = %f", disparityMax);
-
-    //ROS_INFO("Performing stereo matching");
-    auto matcher = SGBM(0, 16*16);
+    ROS_INFO("Performing stereo matching");
+    auto matcher = SGBM(0, 16 * 32);
     cv::Mat disparityMap = matcher.Match(frame);
-
     return DepthFrame(frame.Image1(), disparityMap);
 }
 
@@ -221,38 +257,66 @@ DepthFrame StereoPipeline::PerformStereoMatching(StereoFrame & frame)
  */
 DepthFrame StereoPipeline::PerformDepthExtraction(DepthFrame& frame) 
 {
-    //ROS_INFO("Converting a disparity map into a depth map");
-    cv::Mat depthMap = OpticsUtils::ExtractDepthMap(_rectificationParameters->GetQ(), frame.Depth(), MIN_DEPTH, MAX_DEPTH);
+    ROS_INFO("Converting a disparity map into a depth map");
+    cv::Mat depthMap = OpticsUtils::ExtractDepthMap(_rectificationParameters->GetQ(), frame.Depth(), 0, 1e10);
     return DepthFrame(frame.Color(), depthMap);
 }
 
 //--------------------------------------------------
-// PerformDepthExtraction
+// PublishDepthFrame
 //--------------------------------------------------
 
 /**
- * Add the functionality to generate a 3D model
- * @param frame The depth frame that we are generating the model for
+ * Publish the depth frame to ROS
+ * @param frame The depthframe that we are publishing
+ * @param timestamp The timestamp that we are publishing
  */
-void StereoPipeline::GenerateModel(DepthFrame& frame,ros::Time timestamp) 
+void StereoPipeline::PublishDepthFrame(DepthFrame& frame, ros::Time& timestamp)
 {
+  try
+  {
+    ROS_INFO("Publishing the ROS depth frame");
+    auto header = std_msgs::Header();
+    header.stamp = timestamp;
+    _depthPublisher.publish(cv_bridge::CvImage(header, "32FC1", frame.Depth()).toImageMsg());
+  }
+  catch (cv_bridge::Exception& e)
+  {
+    ROS_ERROR("cv_bridge exception: %s", e.what());
+    return;
+  }
+}
+//--------------------------------------------------
+// Generate and Publish Point Cloud
+//--------------------------------------------------
+
+/**
+ * @brief Generate and publish the point cloud to ROS
+ * @param frame The depth frame we are generating the point cloud from
+ * @param timestamp The corresponding time stamp
+ */
+void StereoPipeline::GenerateAndPublishPointCloud(DepthFrame& frame, ros::Time& timestamp)
+{
+    // Generate the point cloud
     vector<ColorPoint> pointCloud; CloudUtils::ExtractCloud(pointCloud, _rectificationParameters->GetQ(), frame.Color(), frame.Depth());
 
-    // use the current pose for now!
-    //CloudUtils::TransformCloud(_pose, pointCloud);
+    // Create the header for the point cloud message
     sensor_msgs::PointCloud2 pc_msgs;
-    pc_msgs.header.frame_id = "stereo1/left";
+    pc_msgs.header.frame_id = "stereo_pair/left";
     pc_msgs.header.stamp = timestamp;
     pc_msgs.height = 1;
     pc_msgs.width = pointCloud.size();
+
+//    cout << "This is point cloud: " << pc_msgs << endl;
+
+    // Insert the point cloud into the message
     sensor_msgs::PointCloud2Modifier modifier(pc_msgs);
-    std::cout<<"this is pointcloud"<<pc_msgs<<std::endl;
-    modifier.setPointCloud2Fields(6, "x", 1, sensor_msgs::PointField::FLOAT32,
-                                              "y", 1, sensor_msgs::PointField::FLOAT32,
-                                              "z", 1, sensor_msgs::PointField::FLOAT32,
-                                              "r", 1, sensor_msgs::PointField::UINT8,
-                                              "g", 1, sensor_msgs::PointField::UINT8,
-                                              "b", 1, sensor_msgs::PointField::UINT8);
+    modifier.setPointCloud2Fields(6,    "x", 1, sensor_msgs::PointField::FLOAT32,
+                                                "y", 1, sensor_msgs::PointField::FLOAT32,
+                                                "z", 1, sensor_msgs::PointField::FLOAT32,
+                                                "r", 1, sensor_msgs::PointField::UINT8,
+                                                "g", 1, sensor_msgs::PointField::UINT8,
+                                                "b", 1, sensor_msgs::PointField::UINT8);
     modifier.setPointCloud2FieldsByString(2, "xyz","rgb");
     sensor_msgs::PointCloud2Iterator<float> iter_x(pc_msgs, "x");
     sensor_msgs::PointCloud2Iterator<float> iter_y(pc_msgs, "y");
@@ -262,26 +326,21 @@ void StereoPipeline::GenerateModel(DepthFrame& frame,ros::Time timestamp)
     sensor_msgs::PointCloud2Iterator<uint8_t> iter_b(pc_msgs, "b");
     pc_msgs.is_bigendian = false;
     pc_msgs.is_dense = true;
-    for(ColorPoint p : pointCloud){
-        iter_x[0] = p.GetLocation().x/1000.0;
-        iter_y[0] = p.GetLocation().y/1000.0;
-        iter_z[0] = p.GetLocation().z/1000.0;
-        iter_r[0] = p.GetColor()[0];
-        iter_g[0] = p.GetColor()[1];
-        iter_b[0] = p.GetColor()[2];
-        //std::cout<<iter_r[0]<<iter_g[0]<<iter_b[0]<<endl;
-        ++iter_x;
-        ++iter_y;
-        ++iter_z;
-        ++iter_r;
-        ++iter_g;
-        ++iter_b;
-    }
-    this->_pc_pub.publish(pc_msgs);
-}
 
-unsigned int StereoPipeline::cvtRGB(Vec3i _color){
-   uint out =0;
-   out = (_color[0])+((_color[1])<<8)+(_color[2]<<16);
-   return out; 
+    // Copy across the point cloud data
+    for(auto point : pointCloud)
+    {
+        iter_x[0] = point.GetLocation().x;
+        iter_y[0] = point.GetLocation().y;
+        iter_z[0] = point.GetLocation().z;
+        iter_r[0] = point.GetColor()[0];
+        iter_g[0] = point.GetColor()[1];
+        iter_b[0] = point.GetColor()[2];
+
+       // update iterators
+        ++iter_x; ++iter_y; ++iter_z; ++iter_r; ++iter_g; ++iter_b;
+    }
+
+    // Publish the result
+    _pointCloudPublisher.publish(pc_msgs);
 }

@@ -47,28 +47,30 @@ namespace Amantis
 	class StereoPipeline  
 	{
 		private:
-	    double scale;
+	    double _scale;
+
 			Calibration * _calibration;
 			RectificationParameters * _rectificationParameters;
-		public:
-			StereoPipeline(std::string point_cloud_node, std::string depth_node,double scale=1.0);
+
+      ros::Publisher _pointCloudPublisher;
+      ros::Publisher _depthPublisher;
+  public:
+			StereoPipeline(const string& cloudNodeName, const string& depthNodeName, double scale = 1.0);
 			~StereoPipeline();
 
-			void Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
-                  const sensor_msgs::ImageConstPtr& right_image_msg,
-                  const cares_msgs::StereoCameraInfoConstPtr& stereo_info);
+			void Launch(const sensor_msgs::ImageConstPtr& left_image_msg, const sensor_msgs::ImageConstPtr& right_image_msg, const cares_msgs::StereoCameraInfoConstPtr& stereo_info);
 		private:
-			ros::Publisher _pc_pub;
-			ros::Publisher _depth_pub;
-			void ProcessFrame(StereoFrame& frame, ros::Time timestamp);
-			void PublishDepthFrame(DepthFrame& frame, ros::Time timestamp);
-			StereoFrame RemoveDistortion(StereoFrame& frame); 
+
+			void ProcessFrame(StereoFrame& frame, ros::Time& timestamp);
+			StereoFrame RemoveDistortion(StereoFrame& frame);
 			StereoFrame PerformRectification(StereoFrame& frame); 
 			DepthFrame PerformStereoMatching(StereoFrame& frame); 
 			DepthFrame PerformDepthExtraction(DepthFrame& frame); 
-			void GenerateModel(DepthFrame& frame, ros::Time timestamp);
-			void setCalibration(const cares_msgs::StereoCameraInfo stereo_info, double ratio);
-      Calibration* LoadCalibration(const cares_msgs::StereoCameraInfo stereo_info, double ratio);
-			unsigned int cvtRGB(Vec3i _color);
+
+			void SetCalibration(const cares_msgs::StereoCameraInfo& stereo_info, double ratio);
+      Calibration* LoadCalibration(const cares_msgs::StereoCameraInfo& stereo_info, double ratio);
+
+      void GenerateAndPublishPointCloud(DepthFrame& frame, ros::Time & timestamp);
+      void PublishDepthFrame(DepthFrame& frame, ros::Time & timestamp);
 	};
 }

@@ -17,13 +17,16 @@ using namespace Amantis;
  * @param depthNodeName The name of the ros_node holding the depth information
  * @param scale The scaling factor that we want to scale the images by
  */
-StereoPipeline::StereoPipeline(const string& cloudNodeName, const string & depthNodeName, double scale)
+StereoPipeline::StereoPipeline(double scale)
 {
-  _scale = scale;
-  _rectificationParameters = nullptr;
   ros::NodeHandle nh;
-  _pointCloudPublisher = nh.advertise<sensor_msgs::PointCloud2>(cloudNodeName, 1);
-  _depthPublisher = nh.advertise<sensor_msgs::Image>(depthNodeName, 1);
+  _imageColorPublisher = nh.advertise<sensor_msgs::Image>("stereo/image_color", 1);
+  _cameraInfoPublisher = nh.advertise<sensor_msgs::CameraInfo>("stereo/camera_info", 1);
+  _depthPublisher      = nh.advertise<sensor_msgs::Image>("stereo/depth", 1);
+  _pointCloudPublisher = nh.advertise<sensor_msgs::PointCloud2>("stereo/points", 1);
+
+  _scale = scale;
+  _rectificationParameters = nullptr;  
 }
 /**
  * Main Terminator
@@ -54,20 +57,21 @@ void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
       ros::Duration end;
       double ns_to_ms = 1000000.0;
       ros::Time start_calibration = ros::Time::now();
+
       SetCalibration(*stereo_info, _scale);
+
       end = ros::Time::now() - start_calibration;
       ROS_INFO("Calibration Setup: %f", end.nsec/ns_to_ms);
 
       // Retrieve the raw images
       cv::Mat left_image  = cv_bridge::toCvShare(left_image_msg, "bgr8")->image;
       cv::Mat right_image = cv_bridge::toCvShare(right_image_msg, "bgr8")->image;
-      
-      // Extract the timestamp
-      auto timeStamp = left_image_msg->header.stamp;
 
       // Build a stereo frame
       ros::Time start_frame = ros::Time::now();
+      
       auto frame = StereoFrame(left_image, right_image);
+      
       end = ros::Time::now() - start_frame;
       ROS_INFO("Frame Setup: %f", end.nsec/ns_to_ms);
 
@@ -76,7 +80,24 @@ void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
 
       // Launch the stereo processing pipeline to process the frame
       ros::Time start_process = ros::Time::now();
-      ProcessFrame(frame, timeStamp);
+      
+      std_msgs::Header header = left_image_msg->header;
+      header.frame_id = header.frame_id+"_optical_frame";
+      ProcessFrame(frame, header);
+      
+      sensor_msgs::CameraInfo camera_info;
+      camera_info.header = header;
+      camera_info.width  = stereo_info->left_info.width;
+      camera_info.height = stereo_info->left_info.height;
+      camera_info.roi    = stereo_info->left_info.roi;
+
+      auto K1 = stereo_info->left_info.P.elems;
+      camera_info.K = {K1[0], K1[1], K1[2], K1[4], K1[5], K1[6], K1[8], K1[9], K1[10]};
+      camera_info.D = {0,0,0,0,0};
+      camera_info.P = stereo_info->left_info.P;
+      camera_info.R = {1,0,0,0,1,0,0,0,1};
+      _cameraInfoPublisher.publish(camera_info);
+
       end = ros::Time::now() - start_process;
       ROS_INFO("Process: %f", end.nsec/ns_to_ms);
 
@@ -163,9 +184,9 @@ Calibration* StereoPipeline::LoadCalibration(const cares_msgs::StereoCameraInfo&
 /**
  * The main processing pipeline logic goes here
  * @param frame The frame that we are processing
- * @param timestamp The current ROS timestamp for saving the frame
+ * @param header The current ROS header for saving the frame
  */
-void StereoPipeline::ProcessFrame(StereoFrame& frame, ros::Time& timestamp)
+void StereoPipeline::ProcessFrame(StereoFrame& frame, std_msgs::Header& header)
 {
     // Confirm that the calibration was loaded succesfully
     if (!_calibration->LoadSuccess()) throw "Calibration was not loaded succesfully";
@@ -190,10 +211,10 @@ void StereoPipeline::ProcessFrame(StereoFrame& frame, ros::Time& timestamp)
     cv::waitKey(30);
 
     // Publish the depth frame to ROS
-    PublishDepthFrame(depthFrame, timestamp);
+    PublishDepthFrame(depthFrame, header);
 
     // Generate the point cloud and publish it to ROS
-    GenerateAndPublishPointCloud(depthFrame, timestamp);
+    GenerateAndPublishPointCloud(depthFrame, header);    
 }
 
 //--------------------------------------------------
@@ -269,16 +290,15 @@ DepthFrame StereoPipeline::PerformDepthExtraction(DepthFrame& frame)
 /**
  * Publish the depth frame to ROS
  * @param frame The depthframe that we are publishing
- * @param timestamp The timestamp that we are publishing
+ * @param header The header that we are publishing
  */
-void StereoPipeline::PublishDepthFrame(DepthFrame& frame, ros::Time& timestamp)
+void StereoPipeline::PublishDepthFrame(DepthFrame& frame, std_msgs::Header& header)
 {
   try
   {
     ROS_INFO("Publishing the ROS depth frame");
-    auto header = std_msgs::Header();
-    header.stamp = timestamp;
     _depthPublisher.publish(cv_bridge::CvImage(header, "32FC1", frame.Depth()).toImageMsg());
+    _imageColorPublisher.publish(cv_bridge::CvImage(header, "bgr8", frame.Color()).toImageMsg());
   }
   catch (cv_bridge::Exception& e)
   {
@@ -293,17 +313,16 @@ void StereoPipeline::PublishDepthFrame(DepthFrame& frame, ros::Time& timestamp)
 /**
  * @brief Generate and publish the point cloud to ROS
  * @param frame The depth frame we are generating the point cloud from
- * @param timestamp The corresponding time stamp
+ * @param header The corresponding header
  */
-void StereoPipeline::GenerateAndPublishPointCloud(DepthFrame& frame, ros::Time& timestamp)
+void StereoPipeline::GenerateAndPublishPointCloud(DepthFrame& frame, std_msgs::Header& header)
 {
     // Generate the point cloud
     vector<ColorPoint> pointCloud; CloudUtils::ExtractCloud(pointCloud, _rectificationParameters->GetQ(), frame.Color(), frame.Depth());
 
     // Create the header for the point cloud message
     sensor_msgs::PointCloud2 pc_msgs;
-    pc_msgs.header.frame_id = "stereo_pair/left";
-    pc_msgs.header.stamp = timestamp;
+    pc_msgs.header = header;
     pc_msgs.height = 1;
     pc_msgs.width = pointCloud.size();
 

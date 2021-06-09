@@ -47,30 +47,32 @@ namespace Amantis
 	class StereoPipeline  
 	{
 		private:
-	    double _scale;
+	    	double _scale;
 
 			Calibration * _calibration;
 			RectificationParameters * _rectificationParameters;
 
-      ros::Publisher _pointCloudPublisher;
-      ros::Publisher _depthPublisher;
-  public:
-			StereoPipeline(const string& cloudNodeName, const string& depthNodeName, double scale = 1.0);
+			ros::Publisher _imageColorPublisher;
+			ros::Publisher _cameraInfoPublisher;
+  			ros::Publisher _pointCloudPublisher;
+      		ros::Publisher _depthPublisher;
+  		public:
+			StereoPipeline(double scale = 1.0);
 			~StereoPipeline();
 
 			void Launch(const sensor_msgs::ImageConstPtr& left_image_msg, const sensor_msgs::ImageConstPtr& right_image_msg, const cares_msgs::StereoCameraInfoConstPtr& stereo_info);
 		private:
 
-			void ProcessFrame(StereoFrame& frame, ros::Time& timestamp);
+			void ProcessFrame(StereoFrame& frame, std_msgs::Header& header);
 			StereoFrame RemoveDistortion(StereoFrame& frame);
 			StereoFrame PerformRectification(StereoFrame& frame); 
 			DepthFrame PerformStereoMatching(StereoFrame& frame); 
 			DepthFrame PerformDepthExtraction(DepthFrame& frame); 
 
 			void SetCalibration(const cares_msgs::StereoCameraInfo& stereo_info, double ratio);
-      Calibration* LoadCalibration(const cares_msgs::StereoCameraInfo& stereo_info, double ratio);
+      		Calibration* LoadCalibration(const cares_msgs::StereoCameraInfo& stereo_info, double ratio);
 
-      void GenerateAndPublishPointCloud(DepthFrame& frame, ros::Time & timestamp);
-      void PublishDepthFrame(DepthFrame& frame, ros::Time & timestamp);
+      		void GenerateAndPublishPointCloud(DepthFrame& frame, std_msgs::Header& header);
+      		void PublishDepthFrame(DepthFrame& frame, std_msgs::Header& header);
 	};
 }

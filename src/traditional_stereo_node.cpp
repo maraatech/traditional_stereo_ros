@@ -43,24 +43,13 @@ int main(int argc, char **argv)
   ros::NodeHandle nh;
   ros::NodeHandle nh_private("~");
 
-  std::string point_cloud, depth_image;
-  if(!nh_private.getParam(CARES::TraditionalStereo::POINT_CLOUD_S, point_cloud)){
-    ROS_ERROR((CARES::TraditionalStereo::LEFT_IMAGE_S+" not set.").c_str());
-    return EXIT_FAILURE;
-  }
-  if(!nh_private.getParam(CARES::TraditionalStereo::DEPTH_IMAGE_S, depth_image)){
-    ROS_ERROR((CARES::TraditionalStereo::RIGHT_IMAGE_S+" not set.").c_str());
-    return EXIT_FAILURE;
-  }
   double scale = 1.0;
   nh_private.param(CARES::TraditionalStereo::SCALE_D, scale, 1.0);
   if(scale <= 0){
     ROS_ERROR("Scale set to or below 0");
     exit(EXIT_FAILURE);
   }
-  ROS_INFO("%s", point_cloud.c_str());
-  ROS_INFO("%s", depth_image.c_str());
-  StereoPipeline pipeline = Amantis::StereoPipeline(point_cloud, depth_image, scale);
+  StereoPipeline pipeline = Amantis::StereoPipeline(scale);
 
   std::string left_image, right_image, stereo_info;
   if(!nh_private.getParam(CARES::TraditionalStereo::LEFT_IMAGE_S, left_image)){

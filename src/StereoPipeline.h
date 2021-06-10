@@ -69,6 +69,7 @@ namespace Amantis
 			DepthFrame PerformStereoMatching(StereoFrame& frame); 
 			DepthFrame PerformDepthExtraction(DepthFrame& frame); 
 
+			sensor_msgs::CameraInfo generateCameraInfo(const std_msgs::Header& header);
 			void SetCalibration(const cares_msgs::StereoCameraInfo& stereo_info, double ratio);
       		Calibration* LoadCalibration(const cares_msgs::StereoCameraInfo& stereo_info, double ratio);
 

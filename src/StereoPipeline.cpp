@@ -82,20 +82,9 @@ void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
       ros::Time start_process = ros::Time::now();
       
       std_msgs::Header header = left_image_msg->header;
-      header.frame_id = header.frame_id+"_optical_frame";
       ProcessFrame(frame, header);
       
-      sensor_msgs::CameraInfo camera_info;
-      camera_info.header = header;
-      camera_info.width  = stereo_info->left_info.width;
-      camera_info.height = stereo_info->left_info.height;
-      camera_info.roi    = stereo_info->left_info.roi;
-
-      auto K1 = stereo_info->left_info.P.elems;
-      camera_info.K = {K1[0], K1[1], K1[2], K1[4], K1[5], K1[6], K1[8], K1[9], K1[10]};
-      camera_info.D = {0,0,0,0,0};
-      camera_info.P = stereo_info->left_info.P;
-      camera_info.R = {1,0,0,0,1,0,0,0,1};
+      sensor_msgs::CameraInfo camera_info = generateCameraInfo(header);
       _cameraInfoPublisher.publish(camera_info);
 
       end = ros::Time::now() - start_process;
@@ -118,6 +107,24 @@ void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
 // Load the calibration
 //----------------------------------------------------------------------------------
 
+sensor_msgs::CameraInfo StereoPipeline::generateCameraInfo(const std_msgs::Header& header) {
+    sensor_msgs::CameraInfo camera_info;
+    camera_info.header = header;
+    camera_info.width  = this->_calibration->GetImageSize().width;
+    camera_info.height = this->_calibration->GetImageSize().height;
+    camera_info.roi.do_rectify = false;
+
+    cv::Mat P1 = this->_rectificationParameters->GetP1();
+    std::vector<double>P_v(P1.begin<double>(), P1.end<double>());
+
+    //Intrinsic parameters
+    camera_info.K = {P_v[0], P_v[1], P_v[2], P_v[4], P_v[5], P_v[6], P_v[8], P_v[9], P_v[10]};
+    camera_info.D = {0,0,0,0,0};
+    for (int i=0; i<P_v.size(); i++)camera_info.P[i] = (P_v[i]);
+    camera_info.R = {1,0,0,0,1,0,0,0,1};
+    return camera_info;
+}
+
 /**
  * @brief Set the calibration from the ROS message
  * @param stereo_info The stereo information
@@ -125,13 +132,7 @@ void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
  */
 void StereoPipeline::SetCalibration(const cares_msgs::StereoCameraInfo & stereo_info, double ratio)
 {
-  //Load calibration
-  this->_calibration = LoadCalibration(stereo_info, ratio);
-   if (_calibration->LoadSuccess()) ROS_INFO("Calibration successfully loaded!");
-  else ROS_ERROR("Calibration loading failed!");
-
-  // Load the rectification parameters if the calibration was loaded
-  if (_calibration->LoadSuccess()) _rectificationParameters = OpticsUtils::FindRectification(_calibration);
+    LoadCalibration(stereo_info, ratio);
 }
 
 /**
@@ -174,7 +175,16 @@ Calibration* StereoPipeline::LoadCalibration(const cares_msgs::StereoCameraInfo&
     cv::Mat R = R_tmp.clone();
 
     // Return the calibration details
-    return new Calibration( K1, K2, D1, D2, R, T, imageSize);
+    this->_calibration = new Calibration( K1, K2, D1, D2, R, T, imageSize);
+
+    cv::Mat R1(3, 3, CV_64FC1, (void *)stereo_info.left_info.R.data());
+    cv::Mat P1(3, 4, CV_64FC1, (void *)stereo_info.left_info.P.data());
+
+    cv::Mat R2(3, 3, CV_64FC1, (void *)stereo_info.right_info.R.data());
+    cv::Mat P2(3, 4, CV_64FC1, (void *)stereo_info.right_info.P.data());
+
+    cv::Mat Q(4, 4, CV_64FC1, (void *)stereo_info.Q.data());
+    this->_rectificationParameters = new RectificationParameters(R1, R2, P1, P2, Q);
 }
 
 //----------------------------------------------------------------------------------
@@ -192,13 +202,13 @@ void StereoPipeline::ProcessFrame(StereoFrame& frame, std_msgs::Header& header)
     if (!_calibration->LoadSuccess()) throw "Calibration was not loaded succesfully";
 
     // Remove the distortion from the frame
-    auto uframe = RemoveDistortion(frame);
+//    auto uframe = RemoveDistortion(frame);
 
     // Rectify the frame
-    auto rframe = PerformRectification(uframe);
+//    auto rframe = PerformRectification(uframe);
 
     // Calculate a disparity map for the frame
-    auto dispFrame = PerformStereoMatching(rframe);
+    auto dispFrame = PerformStereoMatching(frame);
     DisplayUtils::ShowDepthFrame("Disparity", &dispFrame, 1000);
 
     // Convert the disparity map into a depth map

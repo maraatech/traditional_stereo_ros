@@ -20,9 +20,11 @@ using namespace Amantis;
 StereoPipeline::StereoPipeline(double scale)
 {
   ros::NodeHandle nh;
-  _imageColorPublisher = nh.advertise<sensor_msgs::Image>("stereo/image_color", 1);
+  image_transport::ImageTransport _it(nh);
+  _imageColorPublisher = _it.advertise("stereo/image_color", 1);
+  _depthPublisher      = _it.advertise("stereo/depth", 1);
+
   _cameraInfoPublisher = nh.advertise<sensor_msgs::CameraInfo>("stereo/camera_info", 1);
-  _depthPublisher      = nh.advertise<sensor_msgs::Image>("stereo/depth", 1);
   _pointCloudPublisher = nh.advertise<sensor_msgs::PointCloud2>("stereo/points", 1);
 
   _scale = scale;
@@ -51,6 +53,7 @@ void StereoPipeline::Launch(const sensor_msgs::ImageConstPtr& left_image_msg,
                             const sensor_msgs::ImageConstPtr& right_image_msg,
                             const cares_msgs::StereoCameraInfoConstPtr& stereo_info)
 {
+  ROS_INFO("Start");
   try
   {
       // Set the calibration based on the incoming stereo info
@@ -209,16 +212,16 @@ void StereoPipeline::ProcessFrame(StereoFrame& frame, std_msgs::Header& header)
 
     // Calculate a disparity map for the frame
     auto dispFrame = PerformStereoMatching(frame);
-    DisplayUtils::ShowDepthFrame("Disparity", &dispFrame, 1000);
+//    DisplayUtils::ShowDepthFrame("Disparity", &dispFrame, 1000);
 
     // Convert the disparity map into a depth map
     auto depthFrame = PerformDepthExtraction(dispFrame);
 
     // Show the depth frame for debug purposes
-    Mat depth = depthFrame.Depth() * 2;
-    auto scaledDepth = DepthFrame(depthFrame.Color(), depth);
-    DisplayUtils::ShowDepthFrame("Frame", &scaledDepth, 1000);
-    cv::waitKey(30);
+//    Mat depth = depthFrame.Depth() * 2;
+//    auto scaledDepth = DepthFrame(depthFrame.Color(), depth);
+//    DisplayUtils::ShowDepthFrame("Frame", &scaledDepth, 1000);
+//    cv::waitKey(30);
 
     // Publish the depth frame to ROS
     PublishDepthFrame(depthFrame, header);
@@ -289,7 +292,25 @@ DepthFrame StereoPipeline::PerformStereoMatching(StereoFrame & frame)
 DepthFrame StereoPipeline::PerformDepthExtraction(DepthFrame& frame) 
 {
     ROS_INFO("Converting a disparity map into a depth map");
-    cv::Mat depthMap = OpticsUtils::ExtractDepthMap(_rectificationParameters->GetQ(), frame.Depth(), 0, 1e10);
+    cv::Mat pointCloud;
+    cv::reprojectImageTo3D(frame.Depth(), pointCloud, _rectificationParameters->GetQ(), false,  CV_32F);
+
+    vector<Mat> parts; split(pointCloud, parts);
+    cv::Mat depthMap = parts[2];
+
+    // Fix the infinity wars
+    auto output = (float *) depthMap.data;
+    for (auto row = 0; row < depthMap.rows; row++)
+    {
+      for (auto column = 0; column < depthMap.cols; column++)
+      {
+        auto index = column + row * depthMap.cols;
+        auto depth = output[index];
+        output[index] = isinf(depth) ? 0 : depth;
+      }
+    }
+
+    //cv::Mat depthMap = OpticsUtils::ExtractDepthMap(_rectificationParameters->GetQ(), frame.Depth(), 0, 1e10);
     return DepthFrame(frame.Color(), depthMap);
 }
 
@@ -307,8 +328,13 @@ void StereoPipeline::PublishDepthFrame(DepthFrame& frame, std_msgs::Header& head
   try
   {
     ROS_INFO("Publishing the ROS depth frame");
+    cv::Mat depth = frame.Depth();
+    double min, max;
+    cv::minMaxIdx(depth, &min, &max);
+    ROS_INFO("%f %f", min, max);
     _depthPublisher.publish(cv_bridge::CvImage(header, "32FC1", frame.Depth()).toImageMsg());
     _imageColorPublisher.publish(cv_bridge::CvImage(header, "bgr8", frame.Color()).toImageMsg());
+    ROS_INFO("Published");
   }
   catch (cv_bridge::Exception& e)
   {
@@ -359,6 +385,8 @@ void StereoPipeline::GenerateAndPublishPointCloud(DepthFrame& frame, std_msgs::H
     // Copy across the point cloud data
     for(auto point : pointCloud)
     {
+        if (point.GetLocation().z <= 0) continue;
+
         iter_x[0] = point.GetLocation().x;
         iter_y[0] = point.GetLocation().y;
         iter_z[0] = point.GetLocation().z;

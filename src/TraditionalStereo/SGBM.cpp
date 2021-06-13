@@ -62,10 +62,10 @@ Mat SGBM::Match(StereoFrame & frame)
  */
 Mat SGBM::ConvertResult(Mat& disparity) 
 {
-	Mat result = Mat_<double>::zeros(disparity.size());
+	Mat result = Mat_<float>::zeros(disparity.size());
 
 	auto input = (ushort*)disparity.data;
-	auto output = (double*)result.data;
+	auto output = (float*)result.data;
 
 	for (auto row = 0; row < result.rows; row++) 
 	{
@@ -73,9 +73,9 @@ Mat SGBM::ConvertResult(Mat& disparity)
 		{
 			auto index = column + row * result.cols;
 
-			auto disparityValue = input[index] / 16.0;
+			auto disparityValue = input[index] / 16.0F;
 		
-			if (disparityValue < _minDisparity || disparityValue > _maxDisparity) continue;
+			//if (disparityValue < _minDisparity || disparityValue > _maxDisparity) continue;
 
 			output[index] = disparityValue;
 		}	

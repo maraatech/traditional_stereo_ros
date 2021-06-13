@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
         cv_bridge
         message_filters
         message_generation
+        image_transport
         sensor_msgs
         cares_msgs)
 

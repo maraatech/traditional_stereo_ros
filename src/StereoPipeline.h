@@ -12,6 +12,7 @@ using namespace std;
 
 // Ros Includes
 #include <ros/ros.h>
+#include <image_transport/image_transport.h>
 
 // Messaging includes
 #include <sensor_msgs/Image.h>
@@ -52,10 +53,12 @@ namespace Amantis
 			Calibration * _calibration;
 			RectificationParameters * _rectificationParameters;
 
-			ros::Publisher _imageColorPublisher;
+      image_transport::Publisher _imageColorPublisher;
+      image_transport::Publisher _depthPublisher;
+
 			ros::Publisher _cameraInfoPublisher;
-  			ros::Publisher _pointCloudPublisher;
-      		ros::Publisher _depthPublisher;
+      ros::Publisher _pointCloudPublisher;
+
   		public:
 			StereoPipeline(double scale = 1.0);
 			~StereoPipeline();

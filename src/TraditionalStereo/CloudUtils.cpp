@@ -68,7 +68,7 @@ void CloudUtils::ExtractCloud(vector<ColorPoint>& points, Mat& Q, Mat& color, Ma
 	auto cy = -qdata[7];
 	auto f = -qdata[11];
 
-	auto depthData = (double*)depth.data;
+	auto depthData = (float*)depth.data;
 
 	for (auto row = 0; row < color.rows; row++) 
 	{

@@ -64,7 +64,7 @@ Mat SGBM::ConvertResult(Mat& disparity)
 {
 	Mat result = Mat_<float>::zeros(disparity.size());
 
-	auto input = (ushort*)disparity.data;
+	auto input = (short*)disparity.data;
 	auto output = (float*)result.data;
 
 	for (auto row = 0; row < result.rows; row++) 
@@ -75,7 +75,7 @@ Mat SGBM::ConvertResult(Mat& disparity)
 
 			auto disparityValue = input[index] / 16.0F;
 		
-			//if (disparityValue < _minDisparity || disparityValue > _maxDisparity) continue;
+			if (disparityValue < _minDisparity || disparityValue > _maxDisparity) continue;
 
 			output[index] = disparityValue;
 		}	

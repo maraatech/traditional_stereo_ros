@@ -293,7 +293,7 @@ DepthFrame StereoPipeline::PerformDepthExtraction(DepthFrame& frame)
 {
     ROS_INFO("Converting a disparity map into a depth map");
     cv::Mat pointCloud;
-    cv::reprojectImageTo3D(frame.Depth(), pointCloud, _rectificationParameters->GetQ(), true,  CV_32F);
+    cv::reprojectImageTo3D(frame.Depth(), pointCloud, _rectificationParameters->GetQ(), false,  CV_32F);
 
     vector<Mat> parts; split(pointCloud, parts);
     cv::Mat depthMap = parts[2];

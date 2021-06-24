@@ -293,6 +293,7 @@ DepthFrame StereoPipeline::PerformDepthExtraction(DepthFrame& frame)
 {
     ROS_INFO("Converting a disparity map into a depth map");
     cv::Mat pointCloud;
+    //TODO Pass down this pointcloud to generate point cloud message
     cv::reprojectImageTo3D(frame.Depth(), pointCloud, _rectificationParameters->GetQ(), false,  CV_32F);
 
     vector<Mat> parts; split(pointCloud, parts);
@@ -329,12 +330,8 @@ void StereoPipeline::PublishDepthFrame(DepthFrame& frame, std_msgs::Header& head
   {
     ROS_INFO("Publishing the ROS depth frame");
     cv::Mat depth = frame.Depth();
-    double min, max;
-    cv::minMaxIdx(depth, &min, &max);
-    ROS_INFO("%f %f", min, max);
     _depthPublisher.publish(cv_bridge::CvImage(header, "32FC1", frame.Depth()).toImageMsg());
     _imageColorPublisher.publish(cv_bridge::CvImage(header, "bgr8", frame.Color()).toImageMsg());
-    ROS_INFO("Published");
   }
   catch (cv_bridge::Exception& e)
   {
@@ -354,7 +351,9 @@ void StereoPipeline::PublishDepthFrame(DepthFrame& frame, std_msgs::Header& head
 void StereoPipeline::GenerateAndPublishPointCloud(DepthFrame& frame, std_msgs::Header& header)
 {
     // Generate the point cloud
-    vector<ColorPoint> pointCloud; CloudUtils::ExtractCloud(pointCloud, _rectificationParameters->GetQ(), frame.Color(), frame.Depth());
+    vector<ColorPoint> pointCloud;
+    //TODO should just pass down the point cloud from depth extraction method rather than recreating this
+    CloudUtils::ExtractCloud(pointCloud, _rectificationParameters->GetQ(), frame.Color(), frame.Depth());
 
     // Create the header for the point cloud message
     sensor_msgs::PointCloud2 pc_msgs;

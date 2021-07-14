@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="ns"          default="stereo_pair"/>
-    <arg name="left_image"  default="left/image_rect_color"/>
-    <arg name="right_image" default="right/image_rect_color"/>
-    <arg name="stereo_info" default="stereo_info"/>
-    <arg name="scale"       default="1.0"/>
+    <arg name="sensor"/>
+    <arg name="sensor_topics"/>
 
-    <node name="traditional_stereo" pkg="traditional_stereo_ros" type="traditional_stereo" ns="$(arg ns)">
-        <param name ="left_image"   value="$(arg left_image)"/>
-        <param name ="right_image"  value="$(arg right_image)"/>
-        <param name ="stereo_info"  value="$(arg stereo_info)"/>
+    <arg name="scale"  default="1.0"/>
+    
+    <node name="traditional_stereo" pkg="traditional_stereo_ros" type="traditional_stereo" ns="$(arg sensor)">
+        <!-- Sensor Topics -->
+        <param name ="sensor"        value="$(arg sensor)"/>
+        <rosparam file="$(arg sensor_topics)" command="load"/>
+
         <param name ="scale"        value="$(arg scale)"/>
     </node>
 </launch>

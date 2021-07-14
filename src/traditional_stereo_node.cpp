@@ -51,16 +51,21 @@ int main(int argc, char **argv)
   }
   StereoPipeline pipeline = Amantis::StereoPipeline(scale);
 
+  std::string sensor = "";
+  if(nh_private.getParam(CARES::TraditionalStereo::SENSOR_S, sensor)){
+    sensor += "/";
+  }
+
   std::string left_image, right_image, stereo_info;
-  if(!nh_private.getParam(CARES::TraditionalStereo::LEFT_IMAGE_S, left_image)){
+  if(!nh_private.getParam(sensor+CARES::TraditionalStereo::LEFT_IMAGE_S, left_image)){
     ROS_ERROR((CARES::TraditionalStereo::LEFT_IMAGE_S+" not set.").c_str());
     return EXIT_FAILURE;
   }
-  if(!nh_private.getParam(CARES::TraditionalStereo::RIGHT_IMAGE_S, right_image)){
+  if(!nh_private.getParam(sensor+CARES::TraditionalStereo::RIGHT_IMAGE_S, right_image)){
     ROS_ERROR((CARES::TraditionalStereo::RIGHT_IMAGE_S+" not set.").c_str());
     return EXIT_FAILURE;
   }
-  if(!nh_private.getParam(CARES::TraditionalStereo::STEREO_INFO_S, stereo_info)){
+  if(!nh_private.getParam(sensor+CARES::TraditionalStereo::STEREO_INFO_S, stereo_info)){
     ROS_ERROR((CARES::TraditionalStereo::STEREO_INFO_S+" not set.").c_str());
     return EXIT_FAILURE;
   }

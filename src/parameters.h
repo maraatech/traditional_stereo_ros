@@ -7,9 +7,11 @@
 
 namespace CARES{
     namespace TraditionalStereo{
-        const std::string LEFT_IMAGE_S  = "left_image";
-        const std::string RIGHT_IMAGE_S = "right_image";
-        const std::string STEREO_INFO_S = "stereo_info";
+        const std::string SENSOR_S  = "sensor";
+
+        const std::string LEFT_IMAGE_S  = "left_image_rec_topic";
+        const std::string RIGHT_IMAGE_S = "right_image_rec_topic";
+        const std::string STEREO_INFO_S = "stereo_info_topic";
 
         const std::string SCALE_D = "scale";
     }

@@ -80,9 +80,9 @@ int main(int argc, char **argv)
   sync.registerCallback(boost::bind(&StereoPipeline::Launch, &pipeline, _1, _2, _3));
 
   // Process Loop
-  cv::namedWindow("view");
+  // cv::namedWindow("view");
   ros::spin();
-  cv::destroyWindow("view");
+  // cv::destroyWindow("view");
 
   // Return success
   return EXIT_SUCCESS;

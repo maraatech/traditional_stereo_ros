@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <launch>
-    <!-- <arg name="sensor"/> -->
-    <!-- <arg name="sensor_topics"/> -->
-    <arg name="sensor" default="stereo_pair"/>
-    <arg name="sensor_topics" default="$(find UR10_platform_bringup)/config/sensor_topics.yaml"/>
+    <arg name="sensor"/>
+    <arg name="sensor_topics"/>
 
     <arg name="scale"  default="1.0"/>
     
